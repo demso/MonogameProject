@@ -31,11 +31,9 @@ namespace FirstGame.Game
 
             tiledEntity = CreateEntity("tiledmap");
             tiledEntity.AddComponent(new TiledMapRenderer(tiledMap));
-            
 
-            playerEntity = CreateEntity("player")
-                .AddComponent<>()
-                .SetBodyType(BodyType.Dynamic)
+
+            playerEntity = CreateEntity("player");
 
             playerEntity.Transform.SetPosition(200, 200);
             var ass = new SpriteRenderer(new Sprite(playerSpriteTexture, new Rectangle(17, 0, 16, 16)));
