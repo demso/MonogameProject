@@ -25,6 +25,7 @@ namespace FirstGame.Game
         private Entity debugViewEntity;
         private float playerScale = 1.8f;
         private TmxMap tiledMap;
+        internal static FSWorld world;
 
         private Sprite sprite;
 
@@ -35,22 +36,22 @@ namespace FirstGame.Game
         {
             Graphics.Instance.Batcher.ShouldRoundDestinations = false;
             Graphics.Instance.Batcher.SetIgnoreRoundingDestinations(true);
-            
 
             ClearColor = Color.Black;
             renderer = new DefaultRenderer();
+            renderer.ShouldDebugRender = true;
+            //Core.DebugRenderEnabled = true;
             AddRenderer(renderer);
             Camera.ZoomIn(0.2f);
-            
+
+            FSConvert.SetDisplayUnitToSimUnitRatio(32);
+            world = GetOrCreateSceneComponent<FSWorld>();
+            world.TimeStep = 1 / 144f;
+            world.World.Gravity = Vector2.Zero;
+
             playerSpriteTexture = Texture2D.FromFile(Core.GraphicsDevice, "Content/assets/ClassicRPG_Sheet.png");
             tiledMap = Content.LoadTiledMap("Content/assets/tiledmap/newmap.tmx");
             sprite = new Sprite(playerSpriteTexture, new Rectangle(16, 0, 16, 16));
-
-
-            FSConvert.SetDisplayUnitToSimUnitRatio(32);
-            FSWorld world = GetOrCreateSceneComponent<FSWorld>();
-            world.MinimumUpdateDeltaTime = 1/75f;
-            world.World.Gravity = Vector2.Zero;
 
             FSDebugView debugView = new FSDebugView(world);
             debugView.SetEnabled(false);
@@ -64,7 +65,7 @@ namespace FirstGame.Game
             debugView.AppendFlags(DebugViewFlags.Joint);
             debugView.AppendFlags(DebugViewFlags.Controllers);
 
-            debugView.RemoveFlags(FSDebugView.DebugViewFlags.Shape);
+            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.Shape);
             //debugView.RemoveFlags(FSDebugView.DebugViewFlags.AABB);
             //debugView.RemoveFlags(FSDebugView.DebugViewFlags.DebugPanel);
             //debugView.RemoveFlags(FSDebugView.DebugViewFlags.PolygonPoints);
@@ -100,7 +101,11 @@ namespace FirstGame.Game
                 .AddComponent(new PlayerController());
 
             CreateEntity("debug-view")
-                .AddComponent(new PressKeyToPerformAction(Keys.B, e => debugView.SetEnabled(!debugView.Enabled)))
+                .AddComponent(new PressKeyToPerformAction(Keys.B, e =>
+                {
+                    //Core.DebugRenderEnabled = !Core.DebugRenderEnabled;
+                    debugView.SetEnabled(!debugView.Enabled);
+                }))
                 .AddComponent(debugView);
             Camera.Entity.AddComponent(new FollowCamera(playerEntity));
         }
