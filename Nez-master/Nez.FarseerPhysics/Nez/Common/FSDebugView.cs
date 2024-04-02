@@ -804,8 +804,6 @@ namespace Nez.Farseer
 			if (Flags == 0)
 				return;
 
-			batcher.End();
-			
 			_primitiveBatch.Begin(camera.ProjectionMatrix, camera.TransformMatrix);
 			DrawDebugData();
 			_primitiveBatch.End();
@@ -816,8 +814,6 @@ namespace Nez.Farseer
 				DrawPerformanceGraph();
 				_primitiveBatch.End();
 			}
-
-			batcher.Begin(Entity.Scene.GetRenderer<Renderer>().Material, Entity.Scene.Camera.TransformMatrix);
 
 			Core.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;

@@ -20,7 +20,11 @@ namespace FirstGame.Game
             
             Scene = new MasterScene();
             Scene.SetDefaultDesignResolution(width, height, Scene.SceneResolutionPolicy.None);
-            Scene.SamplerState = SamplerState.PointClamp;
+            Scene.SamplerState = new SamplerState()
+            {
+                Filter = TextureFilter.Anisotropic
+                
+            };
         }
     }
 }

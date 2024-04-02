@@ -11,6 +11,7 @@ using Nez.Farseer;
 using Nez.Sprites;
 using Nez.Textures;
 using Nez.Tiled;
+using static Nez.Farseer.FSDebugView;
 
 namespace FirstGame.Game
 {
@@ -48,18 +49,31 @@ namespace FirstGame.Game
 
             FSConvert.SetDisplayUnitToSimUnitRatio(32);
             FSWorld world = GetOrCreateSceneComponent<FSWorld>();
-            world.MinimumUpdateDeltaTime = 1/144f;
+            world.MinimumUpdateDeltaTime = 1/75f;
             world.World.Gravity = Vector2.Zero;
 
             FSDebugView debugView = new FSDebugView(world);
             debugView.SetEnabled(false);
-            //debugView.AppendFlags(FSDebugView.DebugViewFlags.Shape);
-            //debugView.AppendFlags(FSDebugView.DebugViewFlags.AABB);
-            //debugView.AppendFlags(FSDebugView.DebugViewFlags.DebugPanel);
+            debugView.AppendFlags(FSDebugView.DebugViewFlags.Shape);
+            debugView.AppendFlags(FSDebugView.DebugViewFlags.AABB);
+            debugView.AppendFlags(FSDebugView.DebugViewFlags.DebugPanel);
             debugView.AppendFlags(FSDebugView.DebugViewFlags.PolygonPoints);
-            //debugView.AppendFlags(FSDebugView.DebugViewFlags.PerformanceGraph);
+            debugView.AppendFlags(FSDebugView.DebugViewFlags.PerformanceGraph);
             debugView.AppendFlags(FSDebugView.DebugViewFlags.CenterOfMass);
-            
+            debugView.AppendFlags(DebugViewFlags.ContactPoints);
+            debugView.AppendFlags(DebugViewFlags.Joint);
+            debugView.AppendFlags(DebugViewFlags.Controllers);
+
+            debugView.RemoveFlags(FSDebugView.DebugViewFlags.Shape);
+            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.AABB);
+            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.DebugPanel);
+            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.PolygonPoints);
+            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.PerformanceGraph);
+            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.CenterOfMass);
+            //debugView.RemoveFlags(DebugViewFlags.ContactPoints);
+            //debugView.RemoveFlags(DebugViewFlags.Joint);
+            //debugView.RemoveFlags(DebugViewFlags.Controllers);
+
             tiledEntity = CreateEntity("tiledmap");
             tiledEntity.AddComponent(new TiledMapRenderer(tiledMap));
 
@@ -80,26 +94,20 @@ namespace FirstGame.Game
             playerEntity
                 .SetScale(Vector2.One * playerScale)
                 .SetPosition(200, 200)
-                //.AddComponent(playerBody)
-                //.AddComponent(c)
+                .AddComponent(playerBody)
+                .AddComponent(c)
                 .AddComponent(new BodySpriteRenderer(new Sprite(playerSpriteTexture, new Rectangle(16, 0, 16, 16))))
                 .AddComponent(new PlayerController());
-
-            //playerEntity.Position = Vector2.One;
 
             CreateEntity("debug-view")
                 .AddComponent(new PressKeyToPerformAction(Keys.B, e => debugView.SetEnabled(!debugView.Enabled)))
                 .AddComponent(debugView);
-            //FollowCamera fc = new FollowCamera(playerEntity);
-            //fc.
             Camera.Entity.AddComponent(new FollowCamera(playerEntity));
         }
 
         public override void Update()
         {
             base.Update();
-            //Camera.SetPosition(playerEntity.Position);
-
 
             if (Input.IsKeyPressed(Keys.OemPlus))
             {
@@ -110,15 +118,12 @@ namespace FirstGame.Game
                 Camera.ZoomOut(zoomStep);
             }
         }
-        private SpriteBatch sb = new SpriteBatch(Core.GraphicsDevice);
-       
-        //protected override void PostPostRender()
-        //{
-        //    TiledMapMove
-        //    sb.Begin();
-        //    sb.Draw(sprite.Texture2D, playerEntity.GetComponent<FSRigidBody>().Body.DisplayPosition, sprite.SourceRect, Color.White,
-        //        playerEntity.Transform.Rotation, Vector2.Zero, playerEntity.Transform.Scale, SpriteEffects.None, 0);
-        //    sb.End();
-        //}
+
+        public override void Render()
+        {
+            base.Render();
+
+
+        }
     }
 }

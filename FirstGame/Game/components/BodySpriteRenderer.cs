@@ -40,8 +40,8 @@ namespace FirstGame.Game.components
             //sb.Draw(Sprite.Texture2D, Entity.GetComponent<FSRigidBody>().Body.DisplayPosition + LocalOffset, Sprite.SourceRect, Color,
             //    Entity.Transform.Rotation, Origin, Entity.Transform.Scale, SpriteEffects, _layerDepth);
             //sb.Begin();
-            Graphics.Instance.Batcher.ShouldRoundDestinations = false;
-            Graphics.Instance.Batcher.SetIgnoreRoundingDestinations(true);
+            //Graphics.Instance.Batcher.ShouldRoundDestinations = false;
+            //Graphics.Instance.Batcher.SetIgnoreRoundingDestinations(true);
             batcher.Draw(Sprite, Entity.Position + LocalOffset, Color,
                 Entity.Transform.Rotation, Origin, Entity.Transform.Scale, SpriteEffects, _layerDepth);
         }
