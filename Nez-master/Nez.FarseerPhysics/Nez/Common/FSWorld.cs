@@ -61,7 +61,7 @@ namespace Nez.Farseer
 			World = null;
 		}
 
-
+		private float accumulator = 0;
 		public override void Update()
 		{
 			if (EnableMousePicking)
@@ -87,7 +87,18 @@ namespace Nez.Farseer
 				}
 			}
 
-			World.Step(MathHelper.Min(Time.DeltaTime, MinimumUpdateDeltaTime));
+			float frameTime = MathHelper.Min(Time.DeltaTime, MinimumUpdateDeltaTime);
+			accumulator += frameTime;
+			while (accumulator >= 1/120f)
+			{
+				var timeStep = 1/120f;
+
+				World.Step(timeStep);
+
+				accumulator -= timeStep;
+			}
+
+			
 		}
 
 		#endregion

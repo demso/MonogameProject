@@ -1,4 +1,5 @@
-﻿using Nez;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Nez;
 
 namespace FirstGame.Game
 {
@@ -16,8 +17,10 @@ namespace FirstGame.Game
         protected override void Initialize()
         {
             base.Initialize();
-            Scene.SetDefaultDesignResolution(width, height, Scene.SceneResolutionPolicy.None);
+            
             Scene = new MasterScene();
+            Scene.SetDefaultDesignResolution(width, height, Scene.SceneResolutionPolicy.None);
+            Scene.SamplerState = SamplerState.PointClamp;
         }
     }
 }

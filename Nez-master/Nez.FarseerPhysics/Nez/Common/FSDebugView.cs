@@ -804,9 +804,8 @@ namespace Nez.Farseer
 			if (Flags == 0)
 				return;
 
-			Core.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
+			batcher.End();
+			
 			_primitiveBatch.Begin(camera.ProjectionMatrix, camera.TransformMatrix);
 			DrawDebugData();
 			_primitiveBatch.End();
@@ -818,6 +817,10 @@ namespace Nez.Farseer
 				_primitiveBatch.End();
 			}
 
+			batcher.Begin(Entity.Scene.GetRenderer<Renderer>().Material, Entity.Scene.Camera.TransformMatrix);
+
+			Core.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 			// draw any strings we have
 			for (int i = 0; i < _stringData.Count; i++)
 				batcher.DrawString(Graphics.Instance.BitmapFont, _stringData[i].Text, _stringData[i].Position,

@@ -23,6 +23,7 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nez-master\Nez.FarseerPhysics\Nez.MG38.FarseerPhysics.csproj" />
     <ProjectReference Include="..\Nez-master\Nez.Portable\Nez.MG38.csproj" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

@@ -115,7 +115,10 @@ namespace Nez.Farseer
 
 		public override void OnAddedToEntity()
 		{
+			float bodyMass = Entity.GetComponent<FSRigidBody>().Body.Mass;
 			CreateFixture();
+			if (bodyMass >= 0.3)
+				Entity.GetComponent<FSRigidBody>().SetMass(bodyMass);
 		}
 
 
@@ -127,7 +130,10 @@ namespace Nez.Farseer
 
 		public override void OnEnabled()
 		{
+			float bodyMass = Entity.GetComponent<FSRigidBody>().Body.Mass;
 			CreateFixture();
+			if (bodyMass >= 0.3)
+				Entity.GetComponent<FSRigidBody>().SetMass(bodyMass);
 		}
 
 

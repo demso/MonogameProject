@@ -128,12 +128,12 @@ namespace Nez
 				UpdateFollow();
 			
 			Camera.Position = Vector2.Lerp(Camera.Position, Camera.Position + _desiredPositionDelta, FollowLerp);
-			Camera.Entity.Transform.RoundPosition();
+			//Camera.Entity.Transform.RoundPosition();
 
 			if (MapLockEnabled)
 			{
 				Camera.Position = ClampToMapSize(Camera.Position);
-				Camera.Entity.Transform.RoundPosition();
+				//Camera.Entity.Transform.RoundPosition();
 			}
 		}
 
