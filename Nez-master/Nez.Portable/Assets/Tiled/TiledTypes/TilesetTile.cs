@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using FarseerPhysics.Dynamics;
 
 namespace Nez.Tiled
 {
@@ -51,9 +50,9 @@ namespace Nez.Tiled
 		/// <value>The slope top right.</value>
 		public int SlopeTopRight;
 
-		public Body body;
+		//public Body body;
 
-		public void ProcessProperties()
+		public virtual void ProcessProperties()
 		{
 			string value;
 			if (Properties.TryGetValue("nez:isDestructable", out value))
@@ -70,12 +69,9 @@ namespace Nez.Tiled
 
 			if (Properties.TryGetValue("nez:slopeTopRight", out value))
 				SlopeTopRight = int.Parse(value);
-
-			if (Properties.TryGetValue("body type", out value))
-				BodyR
 			}
 
-		public void UpdateAnimatedTiles()
+		public virtual void UpdateAnimatedTiles()
 		{
 			if (AnimationFrames.Count == 0)
 				return;

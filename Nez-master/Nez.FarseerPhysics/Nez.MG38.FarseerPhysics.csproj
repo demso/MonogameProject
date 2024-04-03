@@ -8,7 +8,7 @@
 		<RootNamespace>Nez.Farseer</RootNamespace>
 		<AssemblyName>Nez.FarseerPhysics</AssemblyName>
 		<OutputType>Library</OutputType>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
