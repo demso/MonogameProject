@@ -16,8 +16,10 @@ namespace Nez.Farseer
 		/// minimum delta time step for the simulation. The min of Time.deltaTime and this will be used for the physics step
 		/// </summary>
 		public float MinimumUpdateDeltaTime = 1f / 30;
+		
+		public float MaxFixedUpdateTime = 0.25f;
 
-		public float TimeStep = 1 / 75f;
+		public float TimeStep = 1/75f;
 
 		/// <summary>
 		/// if true, the left mouse button will be used for picking and dragging physics objects around
@@ -91,17 +93,17 @@ namespace Nez.Farseer
 				}
 			}
 
-			float frameTime = Math.Min(Time.DeltaTime, TimeStep);
+			
+			float frameTime = Math.Min(Time.DeltaTime, MaxFixedUpdateTime);
 			accumulator += frameTime;
 			while (accumulator >= TimeStep)
 			{
 				var curTimeStep = TimeStep;
-
+			
 				World.Step(curTimeStep);
-
+			
 				accumulator -= curTimeStep;
 			}
-			//World.Step(MathHelper.Min(Time.DeltaTime, MinimumUpdateDeltaTime));
 		}
 
 		#endregion

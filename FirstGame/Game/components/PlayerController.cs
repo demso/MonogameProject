@@ -14,7 +14,6 @@ namespace FirstGame.Game
 {
     internal class PlayerController : Component, IUpdatable
     {
-
         public float moveSpeed = 20f;
         private Vector2 velocity = new Vector2(0, 0);
         private Vector2 movement = new Vector2();
@@ -56,11 +55,6 @@ namespace FirstGame.Game
             FSRigidBody rigidBody = Entity.Components.GetComponent<FSRigidBody>(true);
             Body body = rigidBody.Body;
             body.ApplyLinearImpulse(movement);
-            //var movement = velocity * Time.DeltaTime;
-
-            //sfX.Update(ref movement.X);
-            //sfY.Update(ref movement.Y);
-            //Entity.Transform.Position += movement;
         }
     }
 }

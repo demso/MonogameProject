@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FirstGame.Game.components;
+using FirstGame.Game.tiled;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -26,12 +29,12 @@ namespace FirstGame.Game
         private float playerScale = 1.8f;
         private TmxMap tiledMap;
         internal static FSWorld world;
-
-        private Sprite sprite;
+        private FSDebugView debugView;
 
         DefaultRenderer renderer;
 
         float zoomStep = 0.1f;
+        private bool phDebug = false;
         public override void Initialize()
         {
             Graphics.Instance.Batcher.ShouldRoundDestinations = false;
@@ -51,9 +54,8 @@ namespace FirstGame.Game
 
             playerSpriteTexture = Texture2D.FromFile(Core.GraphicsDevice, "Content/assets/ClassicRPG_Sheet.png");
             tiledMap = Content.LoadTiledMap("Content/assets/tiledmap/newmap.tmx");
-            sprite = new Sprite(playerSpriteTexture, new Rectangle(16, 0, 16, 16));
 
-            FSDebugView debugView = new FSDebugView(world);
+            debugView = new FSDebugView(world);
             debugView.SetEnabled(false);
             debugView.AppendFlags(FSDebugView.DebugViewFlags.Shape);
             debugView.AppendFlags(FSDebugView.DebugViewFlags.AABB);
@@ -66,14 +68,14 @@ namespace FirstGame.Game
             debugView.AppendFlags(DebugViewFlags.Controllers);
 
             //debugView.RemoveFlags(FSDebugView.DebugViewFlags.Shape);
-            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.AABB);
-            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.DebugPanel);
-            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.PolygonPoints);
-            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.PerformanceGraph);
-            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.CenterOfMass);
-            //debugView.RemoveFlags(DebugViewFlags.ContactPoints);
-            //debugView.RemoveFlags(DebugViewFlags.Joint);
-            //debugView.RemoveFlags(DebugViewFlags.Controllers);
+            debugView.RemoveFlags(FSDebugView.DebugViewFlags.AABB);
+            debugView.RemoveFlags(FSDebugView.DebugViewFlags.DebugPanel);
+            debugView.RemoveFlags(FSDebugView.DebugViewFlags.PolygonPoints);
+            debugView.RemoveFlags(FSDebugView.DebugViewFlags.PerformanceGraph);
+            debugView.RemoveFlags(FSDebugView.DebugViewFlags.CenterOfMass);
+            debugView.RemoveFlags(DebugViewFlags.ContactPoints);
+            debugView.RemoveFlags(DebugViewFlags.Joint);
+            debugView.RemoveFlags(DebugViewFlags.Controllers);
 
             tiledEntity = CreateEntity("tiledmap");
             tiledEntity.AddComponent(new TiledMapRenderer(tiledMap));
@@ -99,17 +101,21 @@ namespace FirstGame.Game
                 .AddComponent(c)
                 .AddComponent(new BodySpriteRenderer(new Sprite(playerSpriteTexture, new Rectangle(16, 0, 16, 16))))
                 .AddComponent(new PlayerController());
+            
 
             CreateEntity("debug-view")
                 .AddComponent(new PressKeyToPerformAction(Keys.B, e =>
                 {
                     //Core.DebugRenderEnabled = !Core.DebugRenderEnabled;
-                    debugView.SetEnabled(!debugView.Enabled);
+                   phDebug = !phDebug;
                 }))
-                .AddComponent(debugView);
+                .AddComponent(debugView).SetEnabled(false);
+            
             Camera.Entity.AddComponent(new FollowCamera(playerEntity));
+            
+            TiledBodiesLoader.LoadBodies(tiledMap);
         }
-
+        
         public override void Update()
         {
             base.Update();
@@ -128,7 +134,12 @@ namespace FirstGame.Game
         {
             base.Render();
 
-
+            if (phDebug)
+            {
+                Graphics.Instance.Batcher.Begin();
+                debugView.Render(Graphics.Instance.Batcher, Camera);
+                Graphics.Instance.Batcher.End();
+            }
         }
     }
 }

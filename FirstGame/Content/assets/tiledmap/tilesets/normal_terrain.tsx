@@ -49,87 +49,103 @@
  </tile>
  <tile id="4136" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall0"/>
   </properties>
  </tile>
  <tile id="4137" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall1"/>
   </properties>
  </tile>
  <tile id="4138" type="wall">
   <properties>
-   <property name="body type" value="FULL_BODY"/>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall2"/>
   </properties>
  </tile>
  <tile id="4139" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall3"/>
   </properties>
  </tile>
  <tile id="4140" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall4"/>
   </properties>
  </tile>
  <tile id="4141" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall5"/>
   </properties>
  </tile>
  <tile id="4142" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall6"/>
   </properties>
  </tile>
  <tile id="4143" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall7"/>
   </properties>
  </tile>
  <tile id="4144" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall8"/>
   </properties>
  </tile>
  <tile id="4145" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall9"/>
   </properties>
  </tile>
  <tile id="4146" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall10"/>
   </properties>
  </tile>
  <tile id="4147" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall11"/>
   </properties>
  </tile>
  <tile id="4148" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall12"/>
   </properties>
  </tile>
  <tile id="4149" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall13"/>
   </properties>
  </tile>
  <tile id="4150" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall14"/>
   </properties>
  </tile>
  <tile id="4151" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall15"/>
   </properties>
  </tile>
  <tile id="4152" type="wall">
   <properties>
+   <property name="body type" value="fullbody"/>
    <property name="name" value="betonwall16"/>
   </properties>
  </tile>

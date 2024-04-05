@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Nez;
+using System;
 
 namespace FirstGame.Game
 {
@@ -12,6 +13,8 @@ namespace FirstGame.Game
         {
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
+            this.IsFixedTimeStep = true;//false;
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 144f); //60);
         }
 
         protected override void Initialize()

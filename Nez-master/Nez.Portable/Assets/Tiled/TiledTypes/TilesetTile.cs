@@ -50,7 +50,7 @@ namespace Nez.Tiled
 		/// <value>The slope top right.</value>
 		public int SlopeTopRight;
 
-		//public Body body;
+		public string BodyType;
 
 		public virtual void ProcessProperties()
 		{
@@ -69,7 +69,10 @@ namespace Nez.Tiled
 
 			if (Properties.TryGetValue("nez:slopeTopRight", out value))
 				SlopeTopRight = int.Parse(value);
-			}
+			
+			if (Properties.TryGetValue("body type", out value))
+				BodyType = value;
+		}
 
 		public virtual void UpdateAnimatedTiles()
 		{

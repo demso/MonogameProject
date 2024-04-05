@@ -27,7 +27,7 @@ public class BodyTileResolver
 
     private Vector2 tempvec = new Vector2();
 
-    BodyTileResolver(World world)
+    public BodyTileResolver(World world)
     {
         this.world = world;
     }
@@ -58,7 +58,7 @@ public class BodyTileResolver
     {
         tempvec.X = x;
         tempvec.Y = y;
-        Body body = new Body(world, tempvec, 0, BodyType.Dynamic, userData);
+        Body body = new Body(world, tempvec, 0, BodyType.Static, userData);
         Fixture fixture = FixtureFactory.AttachRectangle(0.33f, 0.25f, 1, Vector2.Zero, body);
 
         return body;
@@ -82,7 +82,7 @@ public class BodyTileResolver
 
         tempvec.X = x;
         tempvec.Y = y;
-        Body body = new Body(world, tempvec, 0, BodyType.Dynamic, userData);
+        Body body = new Body(world, tempvec, 0, BodyType.Static, userData);
 
         Fixture fixture = direction switch
         {
@@ -113,8 +113,8 @@ public Body fullBody(float x, float y, Object userData)
 
     tempvec.X = x;
     tempvec.Y = y;
-    Body body = new Body(world, tempvec, 0, BodyType.Dynamic, userData);
-    Fixture fixture = FixtureFactory.AttachRectangle(0.5f, 0.5f, 1, Vector2.Zero, body);
+    Body body = new Body(world, tempvec, 0, BodyType.Static, userData);
+    Fixture fixture = FixtureFactory.AttachRectangle(1f, 1f, 1, Vector2.Zero, body);
 
     return body;
 }
