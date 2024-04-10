@@ -23,7 +23,7 @@ namespace Box2DLight
         private Effect blurShader;
         private Effect diffuseShader;
 
-        SpriteBatch spriteBatch;
+        public SpriteBatch spriteBatch;
 
         internal bool lightMapDrawingDisabled;
 
@@ -42,7 +42,7 @@ namespace Box2DLight
             this.fboWidth = fboWidth;
             this.fboHeight = fboHeight;
             
-            frameBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.Color, DepthFormat.None);
+            frameBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.ColorSRgb, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
             pingPongBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.Color, DepthFormat.None);
 
             spriteBatch = new SpriteBatch(Core.GraphicsDevice);
@@ -52,18 +52,16 @@ namespace Box2DLight
             CreateShaders();
         }
 
-
-
         public void Render()
         {
             bool needed = rayHandler.lightRenderedLastFrame > 0;
 
             if (lightMapDrawingDisabled)
                 return;
-
-            //spriteBatch.Begin();
-            //spriteBatch.Draw(frameBuffer, Vector2.Zero, Color.White);
-            //spriteBatch.End();
+            Core.GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin();
+            spriteBatch.Draw(frameBuffer, Vector2.Zero, Color.White);
+            spriteBatch.End();
 
             // at last lights are rendered over scene
             if (rayHandler.shadows)
