@@ -40,10 +40,10 @@ public class TiledBodiesLoader
             Enum.TryParse(bodyType, true, out realBodyType);
             Body body = resolver.resolveBody(ltile.X+0.5f, ltile.Y+0.5f, new SimpleBodyUserData(ltile, bodyType), realBodyType, resolver.getDirection(ltile));
             
-            Hull h = new Hull( ((PolygonShape)body.FixtureList[0].Shape).Vertices);
-            h.Scale = new Vector2(FSConvert.SimToDisplay);
-            h.Position = body.DisplayPosition;
-            _masterScene.penumbra.Hulls.Add(h);
+            //Hull h = new Hull( ((PolygonShape)body.FixtureList[0].Shape).Vertices);
+            //h.Scale = new Vector2(FSConvert.SimToDisplay);
+            //h.Position = body.DisplayPosition;
+            //_masterScene.penumbra.Hulls.Add(h);
         }
     }
 }

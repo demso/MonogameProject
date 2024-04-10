@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Box2DLight;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -37,19 +38,22 @@ namespace FirstGame.Game
         internal PenumbraComponent penumbra;
         internal GameTime gameTime;
         private PointLight _light;
-        
+        private RayHandler rh;
+        static SpriteBatch spriteBatch;
+
         public override void Initialize()
         {
             Graphics.Instance.Batcher.ShouldRoundDestinations = false;
             Graphics.Instance.Batcher.SetIgnoreRoundingDestinations(true);
 
             ClearColor = Color.Black;
-            renderer = new MyRenderer();
+            renderer = new DefaultRenderer();
             renderer.ShouldDebugRender = true;
             //Core.DebugRenderEnabled = true;
             AddRenderer(renderer);
             Camera.ZoomIn(0.2f);
-            
+            spriteBatch = new SpriteBatch(Core.GraphicsDevice);
+
             FSConvert.SetDisplayUnitToSimUnitRatio(32);
             world = GetOrCreateSceneComponent<FSWorld>();
             world.TimeStep = 1 / 144f;
@@ -75,25 +79,35 @@ namespace FirstGame.Game
             
             Camera.Entity.AddComponent(new FollowCamera(playerEntity));
 
-            penumbra = new PenumbraComponent(Core.Instance);
+            //penumbra = new PenumbraComponent(Core.Instance);
             //penumbra.Debug = true;
-            penumbra.Initialize();
-            penumbra.AmbientColor = Color.Black;
+            //penumbra.Initialize();
+            //penumbra.AmbientColor = Color.Black;
             new TiledBodiesLoader(this).LoadBodies(tiledMap);
-            
-            _light = new PointLight
-            {
-                Position = playerEntity.Position,
-                Color = Color.LightYellow,
-                Scale = new Vector2(1300),
-                ShadowType = ShadowType.Solid
-            };
-            penumbra.Lights.Add(_light);
-            Hull h = new Hull( new Vector2[4]{new Vector2(300, 300), new Vector2(350, 300), new Vector2(350, 350), new Vector2(300, 350)});
-            //h.Position = new Vector2(400, 400);
-            
-            // Adding the Hull to Penumbra
-            penumbra.Hulls.Add(h);
+
+            //_light = new PointLight
+            //{
+            //    Position = playerEntity.Position,
+            //    Color = Color.LightYellow,
+            //    Scale = new Vector2(1300),
+            //    ShadowType = ShadowType.Solid
+            //};
+            //penumbra.Lights.Add(_light);
+            //Hull h = new Hull( new Vector2[4]{new Vector2(300, 300), new Vector2(350, 300), new Vector2(350, 350), new Vector2(300, 350)});
+            ////h.Position = new Vector2(400, 400);
+
+            //// Adding the Hull to Penumbra
+            //penumbra.Hulls.Add(h);
+
+            rh = new RayHandler(world.World);
+            rh.setCombinedMatrix(Camera.ViewProjectionMatrix);
+            RayHandler.useDiffuseLight(true);
+            rh.setAmbientLight(0.5f, 0.5f, 0.5f, 0.5f);
+            rh.setBlur(false);
+            rh.setBlurNum(0);
+
+            Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 5, Color.White, 300, 0 , 0);
+            //light.AttachToBody(playerEntity.Body.Body);
         }
         
         
@@ -113,17 +127,15 @@ namespace FirstGame.Game
             {
                 Camera.ZoomOut(zoomStep);
             }
-            penumbra.BeginDraw();
+            //penumbra.BeginDraw();
         }
 
         public override void Render()
         {
-            
-            base.Render();
-           
-            // Core.GraphicsDevice.Clear(Color.White);
-            // penumbra.Draw(gameTime);
-            
+            //base.Render();
+
+            rh.setCombinedMatrix(Camera.ViewProjectionMatrix);
+            rh.updateAndRender();
 
             if (phDebug)
             {

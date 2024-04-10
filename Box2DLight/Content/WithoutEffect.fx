@@ -45,7 +45,7 @@ technique BasicColorDrawing
 {
     pass P0
     {
-        VertexShader = compile VS_SHADERMODELMainVS();
-        PixelShader = compile PS_SHADERMODELMainPS();
+        VertexShader = compile VS_SHADERMODEL MainVS();
+        PixelShader = compile PS_SHADERMODEL MainPS();
     }
 };

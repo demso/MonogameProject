@@ -40,16 +40,17 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 c = tex2D(RenderTargetSampler, input.TexCoords);
-    Ambient.rgb = (c.rgb * c.a + Ambient.rgb);
-    Ambient.a = Ambient.a - c.a;
-    return Ambient;
+    float4 tempColor = Ambient;
+    tempColor.rgb = (c.rgb * c.a + Ambient.rgb);
+    tempColor.a = Ambient.a - c.a;
+    return tempColor;
 }
 
 technique BasicColorDrawing
 {
     pass P0
     {
-        VertexShader = compile VS_SHADERMODELMainVS();
-        PixelShader = compile PS_SHADERMODELMainPS();
+        VertexShader = compile VS_SHADERMODEL MainVS();
+        PixelShader = compile PS_SHADERMODEL MainPS();
     }
 };

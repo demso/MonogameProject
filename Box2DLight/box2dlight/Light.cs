@@ -30,7 +30,6 @@ namespace Box2DLight
         protected bool ignoreBody = false;
 
         protected int rayNum;
-        //protected int vertexNum;
         protected int lightVertexNum;
         protected int softShadowVertexNum;
 
@@ -77,17 +76,6 @@ namespace Box2DLight
         public abstract void Update();
 
         public abstract void Render();
-
-        //protected void DynamicShadowRender()
-        //{
-        //    foreach (VertexBuffer m in dynamicShadowMeshes)
-        //    {
-        //        //m.Render(rayHandler.lightShader, PrimitiveType.TriangleStrip);
-        //        rayHandler.lightShader.CurrentTechnique.Passes[0].Apply();
-        //        Core.GraphicsDevice.SetVertexBuffer(m);
-        //        Core.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, m.VertexCount);
-        //    }
-        //}
 
         public abstract void SetDistance(float dist);
 
@@ -275,22 +263,15 @@ namespace Box2DLight
             return ignoreBody;
         }
 
-        //public void SetHeight(float height)
-        //{
-        //    pseudo3dHeight = height;
-        //}
-
         protected virtual void SetRayNum(int rays)
         {
             if (rays < MinRays)
                 rays = MinRays;
 
             rayNum = rays;
-            //vertexNum = rays * 3;
             lightVertexNum = rays * 3;
             softShadowVertexNum = rays * 2;
 
-            //segments = new float[vertexNum * 8];
             mx = new float[rays + 1];
             my = new float[rays + 1];
             f = new float[rays + 1];
@@ -392,39 +373,6 @@ namespace Box2DLight
             GlobalCollisionGroup = collideGroup;
             GlobalCollisionCategories = collisionCategories;
         }
-
-        //protected bool OnDynamicCallback(Fixture fixture)
-        //{
-        //    if ((globalFilterA != null) && !GlobalContactFilter(fixture))
-        //    {
-        //        return false;
-        //    }
-
-        //    if ((filterA != null) && !ContactFilter(fixture))
-        //    {
-        //        return false;
-        //    }
-
-        //    if (ignoreBody && fixture.Body == GetBody())
-        //    {
-        //        return false;
-        //    }
-        //    return !affectedFixtures.Contains(fixture);
-        //}
-
-        //internal readonly QueryCallback dynamicShadowCallback = new QueryCallback(fixture =>
-        //{
-        //    if (!OnDynamicCallback(fixture))
-        //    {
-        //        return true;
-        //    }
-        //    affectedFixtures.Add(fixture);
-        //    if (fixture.UserData is LightData data)
-        //    {
-        //        data.ShadowsDropped++;
-        //    }
-        //    return true;
-        //});
     }
 }
 

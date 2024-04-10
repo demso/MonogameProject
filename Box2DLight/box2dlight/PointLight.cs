@@ -55,12 +55,6 @@ namespace Box2dLight
 
         public override void Update()
         {
-            //if (rayHandler.pseudo3d)
-            //{
-            //    PrepareFixtureData();
-            //    UpdateDynamicShadowMeshes();
-            //}
-
             UpdateBody();
             if (dirty) SetEndPoints();
 

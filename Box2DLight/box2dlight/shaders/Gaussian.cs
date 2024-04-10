@@ -55,4 +55,3 @@ namespace Box2DLight.box2dlight.shaders
         }
     }
 }
-}

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Box2DLight;
 using Box2DLight.box2dlight.shaders;
+using Box2DLight.shaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
@@ -21,6 +22,8 @@ namespace Box2DLight
         private Effect withoutShadowShader;
         private Effect blurShader;
         private Effect diffuseShader;
+
+        SpriteBatch spriteBatch;
 
         internal bool lightMapDrawingDisabled;
 
@@ -42,6 +45,8 @@ namespace Box2DLight
             frameBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.Color, DepthFormat.None);
             pingPongBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.Color, DepthFormat.None);
 
+            spriteBatch = new SpriteBatch(Core.GraphicsDevice);
+
             lightMapMesh = CreateLightMapMesh();
 
             CreateShaders();
@@ -56,53 +61,27 @@ namespace Box2DLight
             if (lightMapDrawingDisabled)
                 return;
 
-            //if (rayHandler.pseudo3d)
-            //{
-            //    frameBuffer.
-            //    frameBuffer.SetData(0, 0, fboWidth, fboHeight, 1, 0);
-            //    shadowBuffer.SetData(0, 0, fboWidth, fboHeight, 0, 0);
-            //}
-            //else
-            //{
-            //    frameBuffer.SetData(0, 0, fboWidth, fboHeight, 0, 0);
-            //}
+            //spriteBatch.Begin();
+            //spriteBatch.Draw(frameBuffer, Vector2.Zero, Color.White);
+            //spriteBatch.End();
 
             // at last lights are rendered over scene
             if (rayHandler.shadows)
             {
                 Color c = rayHandler.ambientLight;
                 Effect shader = shadowShader;
-                //if (rayHandler.pseudo3d)
-                //{
-                //    shader.CurrentTechnique.Passes[0].Apply();
-                //    if (RayHandler.isDiffuse)
-                //    {
-                //        rayHandler.diffuseBlendFunc.Apply();
-                //        shader.Parameters["ambient"].SetValue(new Vector4(c.R, c.G, c.B, c.A));
-                //    }
-                //    else
-                //    {
-                //        rayHandler.shadowBlendFunc.Apply();
-                //        shader.Parameters["ambient"].SetValue(new Vector4(c.R * c.A, c.G * c.A, c.B * c.A, 255 - c.A));
-                //    }
-                //    shader.Parameters["isDiffuse"].SetValue(RayHandler.isDiffuse ? 1 : 0);
-                //    shader.Parameters["u_texture"].SetValue(1);
-                //    shader.Parameters["u_shadows"].SetValue(0);
-                //}
-                //else 
                 if (RayHandler.isDiffuse)
                 {
                     shader = diffuseShader;
-                    //shader.CurrentTechnique.Passes[0].Apply();
                     rayHandler.diffuseBlendFunc.Apply();
-                    shader.Parameters["Ambient"].SetValue(new Vector4(c.R, c.G, c.B, c.A));
+                    shader.Parameters["Ambient"].SetValue(new Vector4(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f));
                 }
                 else
                 {
                     rayHandler.shadowBlendFunc.Apply();
-                    shader.Parameters["Ambient"].SetValue(new Vector4(c.R * c.A, c.G * c.A, c.B * c.A, 255 - c.A));
+                    shader.Parameters["Ambient"].SetValue(new Vector4((float)c.R * (float)c.A / 255f, (float)c.G * (float)c.A / 255f, (float)c.B * (float)c.A / 255f, 1f - (float)c.A / 255f));
                 }
-                
+
                 shader.CurrentTechnique.Passes[0].Apply();
                 graphicsDevice.SetVertexBuffer(lightMapMesh);
                 graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
@@ -192,18 +171,22 @@ namespace Box2DLight
         {
             VertexPositionTexture[] vertices = new VertexPositionTexture[4];
             // vertex coord
+            //vertices[0].Position = new Vector3(0, 0, 0);
+            //vertices[1].Position = new Vector3(0, 1, 0);
+            //vertices[2].Position = new Vector3(1, 0, 0);
+            //vertices[3].Position = new Vector3(1, 1, 0);
             vertices[0].Position = new Vector3(-1, -1, 0);
             vertices[1].Position = new Vector3(-1, 1, 0);
-            vertices[2].Position = new Vector3(1, 1, 0);
-            vertices[3].Position = new Vector3(1, -1, 0);
+            vertices[2].Position = new Vector3(1, -1, 0);
+            vertices[3].Position = new Vector3(1, 1, 0);
 
             // tex coords
             vertices[0].TextureCoordinate = new Vector2(0f, 0f);
-            vertices[1].TextureCoordinate = new Vector2(0f, 1f);
-            vertices[2].TextureCoordinate = new Vector2(1f, 1f);
-            vertices[3].TextureCoordinate = new Vector2(1f, 0f);
+            vertices[1].TextureCoordinate = new Vector2(1f, 0f);
+            vertices[2].TextureCoordinate = new Vector2(0f, 1f);
+            vertices[3].TextureCoordinate = new Vector2(1f, 1f);
 
-            VertexBuffer tmpMesh = new VertexBuffer(graphicsDevice, typeof(VertexPositionTexture), 4, BufferUsage.None);
+            VertexBuffer tmpMesh = new VertexBuffer(graphicsDevice, typeof(VertexPositionTexture), 4, BufferUsage.WriteOnly);
             tmpMesh.SetData(vertices);
             return tmpMesh;
         }

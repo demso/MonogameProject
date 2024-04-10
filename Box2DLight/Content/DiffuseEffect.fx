@@ -39,8 +39,10 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    Ambient.a = 1.0;
-    return Ambient.rgb = (Ambient.rgb + tex2D(RenderTargetSampler, input.TexCoords).rgb);
+    float4 tempColor = Ambient;
+    tempColor.a = 1.0;
+    tempColor.rgb = (Ambient.rgb + tex2D(RenderTargetSampler, input.TexCoords).rgb);
+    return tempColor;
 }
 
 technique BasicColorDrawing

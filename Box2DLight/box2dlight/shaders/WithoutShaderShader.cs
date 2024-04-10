@@ -12,10 +12,9 @@ namespace Box2DLight.box2dlight.shaders
     {
         static public Effect CreateShadowShader()
         {
-            Effect tmp = Core.Content.Load<Effect>("Content/WithoutEffect.fx");
+            Effect tmp = Core.Content.Load<Effect>(@"WithoutEffect");
 
             return tmp;
         }
     }
-}
 }

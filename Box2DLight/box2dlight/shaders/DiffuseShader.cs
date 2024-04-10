@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 
-namespace Box2DLight.box2dlight.shaders
+namespace Box2DLight.shaders
 {
     internal class DiffuseShader
     {
         static public Effect CreateShadowShader()
         {
-            Effect tmp = Core.Content.Load<Effect>("Content/DiffuseEffect.fx");
+            Effect tmp = Core.Content.Load<Effect>(@"DiffuseEffect");
 
-            return tmp; ;
+            return tmp; 
         }
     }
-}
 }

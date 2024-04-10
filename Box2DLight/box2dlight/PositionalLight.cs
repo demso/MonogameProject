@@ -34,8 +34,8 @@ namespace Box2DLight
             start.X = x;
             start.Y = y;
 
-            lightMesh = new VertexBuffer(Core.GraphicsDevice, typeof(CustomVertex), vertexNum, BufferUsage.WriteOnly);
-            softShadowMesh = new VertexBuffer(Core.GraphicsDevice, typeof(CustomVertex), rayNum * 2, BufferUsage.WriteOnly);
+            lightMesh = new VertexBuffer(Core.GraphicsDevice, typeof(CustomVertex), lightVertexNum + 10, BufferUsage.WriteOnly);
+            softShadowMesh = new VertexBuffer(Core.GraphicsDevice, typeof(CustomVertex), softShadowVertexNum + 10, BufferUsage.WriteOnly);
             SetMesh();
         }
 
@@ -74,17 +74,11 @@ namespace Box2DLight
             rayHandler.lightRenderedLastFrame++;
             Core.GraphicsDevice.SetVertexBuffer(lightMesh);
             Core.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, lightVertexNum);
-            //lightMesh.Render(rayHandler.lightShader, GraphicsDevice.GL_TRIANGLE_FAN, 0, vertexNum);
 
             if (soft && !xray && !rayHandler.pseudo3d)
             {
                 Core.GraphicsDevice.SetVertexBuffer(softShadowMesh);
                 Core.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, softShadowVertexNum);
-                //softShadowMesh.Render(
-                //    rayHandler.lightShader,
-                //    GraphicsDevice.GL_TRIANGLE_STRIP,
-                //    0,
-                //    (vertexNum - 1) * 2);
             }
         }
 
@@ -225,13 +219,6 @@ namespace Box2DLight
             SetMesh();
         }
 
-        //protected void PrepareFixtureData()
-        //{
-        //    rayHandler.world.QueryAABB(
-        //            dynamicShadowCallback,
-        //            start.X - distance, start.Y - distance,
-        //            start.X + distance, start.Y + distance);
-        //}
 
         protected void SetMesh()
         {
@@ -239,54 +226,29 @@ namespace Box2DLight
             int size = 0;
             int tempIndex = 0;
 
-            CustomVertex[] vertices = new CustomVertex[size * 8 * 3 + 1];
-            //vertices[0] = new CustomVertex(start, color, 1);
-            //three points for every triangle
+            CustomVertex[] vertices = new CustomVertex[lightVertexNum];
             Vector2 tmpVec = new Vector2();
-            for (int i = 0; i < rayNum * 3; i += 3)
+            for (int i = 0; i < rayNum; i += 1)
             {
-                vertices[i] = new CustomVertex(start, color, 1);
+                vertices[size] = new CustomVertex(start, color, 1);
+                size++;
                 tmpVec.X = mx[tempIndex];
                 tmpVec.Y = my[tempIndex];
-                vertices[i + 1] = new CustomVertex(tmpVec, color, 1 - f[tempIndex]);
+                vertices[size] = new CustomVertex(tmpVec, color, 1 - f[tempIndex]);
+                size++;
                 tempIndex++;
                 tmpVec.X = mx[tempIndex];
                 tmpVec.Y = my[tempIndex];
-                vertices[i + 2] = new CustomVertex(tmpVec, color, 1 - f[tempIndex]);
-                tempIndex++;
-                size += 3;
+                vertices[size] = new CustomVertex(tmpVec, color, 1 - f[tempIndex]);
+                size++;
             }
 
-            //segments[size++] = start.X;
-            //segments[size++] = start.Y;
-            //segments[size++] = colorF;
-            //segments[size++] = 1;
-            //// rays ending points.
-            //for (int i = 0; i < rayNum; i++)
-            //{
-            //    segments[size++] = mx[i];
-            //    segments[size++] = my[i];
-            //    segments[size++] = colorF;
-            //    segments[size++] = 1 - f[i];
-            //}
             lightMesh.SetData(vertices, 0, size);
 
             if (!soft || xray || rayHandler.pseudo3d) return;
 
+            vertices = new CustomVertex[softShadowVertexNum];
             size = 0;
-            // rays ending points.
-            //for (int i = 0; i < rayNum; i++)
-            //{
-            //    segments[size++] = mx[i];
-            //    segments[size++] = my[i];
-            //    segments[size++] = colorF;
-            //    float s = (1 - f[i]);
-            //    segments[size++] = s;
-            //    segments[size++] = mx[i] + s * softShadowLength * cos[i];
-            //    segments[size++] = my[i] + s * softShadowLength * sin[i];
-            //    segments[size++] = ZeroColorBits;
-            //    segments[size++] = 0f;
-            //}
             tempIndex = 0;
             for (int i = 0; i < rayNum; i++)
             {
@@ -300,280 +262,6 @@ namespace Box2DLight
             }
             softShadowMesh.SetData(vertices, 0, size);
         }
-
-        //protected void UpdateDynamicShadowMeshes()
-        //{
-        //    int meshInd = 0;
-        //    float colBits = rayHandler.ambientLight.ToFloatBits();
-        //    foreach (Fixture fixture in affectedFixtures)
-        //    {
-        //        LightData data = (LightData)fixture.UserData;
-        //        if (data == null || fixture.IsSensor) continue;
-
-        //        int size = 0;
-        //        float l;
-
-        //        Shape fixtureShape = fixture.Shape;
-        //        Shape.Type type = fixtureShape.Type;
-        //        Body body = fixture.Body;
-        //        center.Set(body.WorldCenter);
-
-        //        if (type == Shape.Type.Polygon || type == Shape.Type.Chain)
-        //        {
-        //            bool isPolygon = (type == Shape.Type.Polygon);
-        //            ChainShape cShape = isPolygon ?
-        //                    null : (ChainShape)fixtureShape;
-        //            PolygonShape pShape = isPolygon ?
-        //                    (PolygonShape)fixtureShape : null;
-        //            int vertexCount = isPolygon ?
-        //                    pShape.VertexCount : cShape.VertexCount;
-        //            int minN = -1;
-        //            int maxN = -1;
-        //            int minDstN = -1;
-        //            float minDst = float.PositiveInfinity;
-        //            bool hasGasp = false;
-        //            tmpVerts.Clear();
-        //            for (int n = 0; n < vertexCount; n++)
-        //            {
-        //                if (isPolygon)
-        //                {
-        //                    pShape.GetVertex(n, tmpVec);
-        //                }
-        //                else
-        //                {
-        //                    cShape.GetVertex(n, tmpVec);
-        //                }
-        //                tmpVec.Set(body.GetWorldPoint(tmpVec));
-        //                tmpVerts.Add(tmpVec.Cpy());
-        //                tmpEnd.Set(tmpVec).Sub(start).Limit2(0.0001f).Add(tmpVec);
-        //                if (fixture.TestPoint(tmpEnd))
-        //                {
-        //                    if (minN == -1) minN = n;
-        //                    maxN = n;
-        //                    hasGasp = true;
-        //                    continue;
-        //                }
-
-        //                float currDist = tmpVec.Dst2(start);
-        //                if (currDist < minDst)
-        //                {
-        //                    minDst = currDist;
-        //                    minDstN = n;
-        //                }
-        //            }
-
-        //            ind.Clear();
-        //            if (!hasGasp)
-        //            {
-        //                tmpVec.Set(tmpVerts.Get(minDstN));
-        //                for (int n = minDstN; n < vertexCount; n++)
-        //                {
-        //                    ind.Add(n);
-        //                }
-        //                for (int n = 0; n < minDstN; n++)
-        //                {
-        //                    ind.Add(n);
-        //                }
-        //                if (Intersector.PointLineSide(start, center, tmpVec) > 0)
-        //                {
-        //                    ind.Reverse();
-        //                    ind.Insert(0, ind.Pop());
-        //                }
-        //            }
-        //            else if (minN == 0 && maxN == vertexCount - 1)
-        //            {
-        //                for (int n = maxN - 1; n > minN; n--)
-        //                {
-        //                    ind.Add(n);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                for (int n = minN - 1; n > -1; n--)
-        //                {
-        //                    ind.Add(n);
-        //                }
-        //                for (int n = vertexCount - 1; n > maxN; n--)
-        //                {
-        //                    ind.Add(n);
-        //                }
-        //            }
-
-        //            bool contained = false;
-        //            foreach (int n in ind.ToArray())
-        //            {
-        //                tmpVec.Set(tmpVerts.Get(n));
-        //                if (Contains(tmpVec.X, tmpVec.Y))
-        //                {
-        //                    contained = true;
-        //                    break;
-        //                }
-        //            }
-
-        //            if (!contained)
-        //                continue;
-
-        //            foreach (int n in ind.ToArray())
-        //            {
-        //                tmpVec.Set(tmpVerts.Get(n));
-
-        //                float dst = tmpVec.Dst(start);
-        //                l = data.GetLimit(dst, pseudo3dHeight, distance);
-        //                tmpEnd.Set(tmpVec).Sub(start).SetLength(l).Add(tmpVec);
-
-        //                float f1 = 1f - dst / distance;
-        //                float f2 = 1f - (dst + l) / distance;
-
-        //                tmpColor.Set(Color.Black);
-        //                float startColBits = rayHandler.shadowColorInterpolation ?
-        //                        tmpColor.Lerp(rayHandler.ambientLight, f1).ToFloatBits() :
-        //                        oneColorBits;
-        //                tmpColor.Set(Color.White);
-        //                float endColBits = rayHandler.shadowColorInterpolation ?
-        //                        tmpColor.Lerp(rayHandler.ambientLight, f2).ToFloatBits() :
-        //                        colBits;
-
-        //                segments[size++] = tmpVec.X;
-        //                segments[size++] = tmpVec.Y;
-        //                segments[size++] = startColBits;
-        //                segments[size++] = f1;
-
-        //                segments[size++] = tmpEnd.X;
-        //                segments[size++] = tmpEnd.Y;
-        //                segments[size++] = endColBits;
-        //                segments[size++] = f2;
-        //            }
-        //        }
-        //        else if (type == Shape.Type.Circle)
-        //        {
-        //            CircleShape shape = (CircleShape)fixtureShape;
-        //            float r = shape.Radius;
-        //            if (!Contains(tmpVec.Set(center).Add(r, r)) && !Contains(tmpVec.Set(center).Add(-r, -r))
-        //                    && !Contains(tmpVec.Set(center).Add(r, -r)) && !Contains(tmpVec.Set(center).Add(-r, r)))
-        //            {
-        //                continue;
-        //            }
-
-        //            float dst = tmpVec.Set(center).Dst(start);
-        //            float a = (float)Math.Acos(r / dst);
-        //            l = data.GetLimit(dst, pseudo3dHeight, distance);
-        //            float f1 = 1f - dst / distance;
-        //            float f2 = 1f - (dst + l) / distance;
-        //            tmpColor.Set(Color.Black);
-        //            float startColBits = rayHandler.shadowColorInterpolation ?
-        //                    tmpColor.Lerp(rayHandler.ambientLight, f1).ToFloatBits() :
-        //                    oneColorBits;
-        //            tmpColor.Set(Color.White);
-        //            float endColBits = rayHandler.shadowColorInterpolation ?
-        //                    tmpColor.Lerp(rayHandler.ambientLight, f2).ToFloatBits() :
-        //                    colBits;
-
-        //            tmpVec.Set(start).Sub(center).Clamp(r, r).RotateRad(a);
-        //            tmpStart.Set(center).Add(tmpVec);
-
-        //            float angle = (MathUtils.PI2 - 2f * a) /
-        //                    RayHandler.CIRCLE_APPROX_POINTS;
-        //            for (int k = 0; k < RayHandler.CIRCLE_APPROX_POINTS; k++)
-        //            {
-        //                tmpStart.Set(center).Add(tmpVec);
-        //                segments[size++] = tmpStart.X;
-        //                segments[size++] = tmpStart.Y;
-        //                segments[size++] = startColBits;
-        //                segments[size++] = f1;
-
-        //                tmpEnd.Set(tmpStart).Sub(start).SetLength(l).Add(tmpStart);
-        //                segments[size++] = tmpEnd.X;
-        //                segments[size++] = tmpEnd.Y;
-        //                segments[size++] = endColBits;
-        //                segments[size++] = f2;
-
-        //                tmpVec.RotateRad(angle);
-        //            }
-        //        }
-        //        else if (type == Shape.Type.Edge)
-        //        {
-        //            EdgeShape shape = (EdgeShape)fixtureShape;
-
-        //            shape.GetVertex1(tmpVec);
-        //            tmpVec.Set(body.GetWorldPoint(tmpVec));
-        //            if (!Contains(tmpVec))
-        //            {
-        //                continue;
-        //            }
-        //            float dst = tmpVec.Dst(start);
-        //            l = data.GetLimit(dst, pseudo3dHeight, distance);
-        //            float f1 = 1f - dst / distance;
-        //            float f2 = 1f - (dst + l) / distance;
-        //            tmpColor.Set(Color.Black);
-        //            float startColBits = rayHandler.shadowColorInterpolation ?
-        //                    tmpColor.Lerp(rayHandler.ambientLight, f1).ToFloatBits() :
-        //                    oneColorBits;
-        //            tmpColor.Set(Color.White);
-        //            float endColBits = rayHandler.shadowColorInterpolation ?
-        //                    tmpColor.Lerp(rayHandler.ambientLight, f2).ToFloatBits() :
-        //                    colBits;
-
-        //            segments[size++] = tmpVec.X;
-        //            segments[size++] = tmpVec.Y;
-        //            segments[size++] = startColBits;
-        //            segments[size++] = f1;
-
-        //            tmpEnd.Set(tmpVec).Sub(start).SetLength(l).Add(tmpVec);
-        //            segments[size++] = tmpEnd.X;
-        //            segments[size++] = tmpEnd.Y;
-        //            segments[size++] = endColBits;
-        //            segments[size++] = f2;
-
-        //            shape.GetVertex2(tmpVec);
-        //            tmpVec.Set(body.GetWorldPoint(tmpVec));
-        //            if (!Contains(tmpVec))
-        //            {
-        //                continue;
-        //            }
-        //            dst = tmpVec.Dst(start);
-        //            l = data.GetLimit(dst, pseudo3dHeight, distance);
-        //            f1 = 1f - dst / distance;
-        //            f2 = 1f - (dst + l) / distance;
-        //            tmpColor.Set(Color.Black);
-        //            startColBits = rayHandler.shadowColorInterpolation ?
-        //                    tmpColor.Lerp(rayHandler.ambientLight, f1).ToFloatBits() :
-        //                    oneColorBits;
-        //            tmpColor.Set(Color.White);
-        //            endColBits = rayHandler.shadowColorInterpolation ?
-        //                    tmpColor.Lerp(rayHandler.ambientLight, f2).ToFloatBits() :
-        //                    colBits;
-
-        //            segments[size++] = tmpVec.X;
-        //            segments[size++] = tmpVec.Y;
-        //            segments[size++] = startColBits;
-        //            segments[size++] = f1;
-
-        //            tmpEnd.Set(tmpVec).Sub(start).SetLength(l).Add(tmpVec);
-        //            segments[size++] = tmpEnd.X;
-        //            segments[size++] = tmpEnd.Y;
-        //            segments[size++] = endColBits;
-        //            segments[size++] = f2;
-        //        }
-
-        //        Mesh mesh = null;
-        //        if (meshInd >= dynamicShadowMeshes.Count)
-        //        {
-        //            mesh = new Mesh(
-        //                    Mesh.VertexDataType.VertexArray, false, RayHandler.MAX_SHADOW_VERTICES, 0,
-        //                    new VertexAttribute(VertexAttributes.Usage.Position, 2, "vertex_positions"),
-        //                    new VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, "quad_colors"),
-        //                    new VertexAttribute(VertexAttributes.Usage.Generic, 1, "s"));
-        //            dynamicShadowMeshes.Add(mesh);
-        //        }
-        //        else
-        //        {
-        //            mesh = dynamicShadowMeshes[meshInd];
-        //        }
-        //        mesh.SetVertices(segments, 0, size);
-        //        meshInd++;
-        //    }
-        //    dynamicShadowMeshes.Truncate(meshInd);
-        //}
 
         public float GetBodyOffsetX()
         {

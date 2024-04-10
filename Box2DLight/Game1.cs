@@ -14,7 +14,6 @@ namespace Box2DLight
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            RayHandler
         }
 
         protected override void Initialize()
