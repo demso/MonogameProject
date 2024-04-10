@@ -58,10 +58,6 @@ namespace Box2DLight
 
             if (lightMapDrawingDisabled)
                 return;
-            Core.GraphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin();
-            spriteBatch.Draw(frameBuffer, Vector2.Zero, Color.White);
-            spriteBatch.End();
 
             // at last lights are rendered over scene
             if (rayHandler.shadows)
