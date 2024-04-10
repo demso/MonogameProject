@@ -1,0 +1,30 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:DesktopGL
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+
+#---------------------------------- Content ---------------------------------#
+
+#begin DiffuseEffect.fx
+/copy:DiffuseEffect.fx
+
+#begin GaussianEffect.fx
+/copy:GaussianEffect.fx
+
+#begin LightEffect.fx
+/copy:LightEffect.fx
+
+#begin ShadowEffect.fx
+/copy:ShadowEffect.fx
+
+#begin WithoutEffect.fx
+/copy:WithoutEffect.fx
+

@@ -14,111 +14,96 @@ using Nez.Farseer;
 using Nez.Sprites;
 using Nez.Textures;
 using Nez.Tiled;
+using NVorbis.Ogg;
+using Penumbra;
 using static Nez.Farseer.FSDebugView;
 
 namespace FirstGame.Game
 {
     internal class MasterScene : Scene
     {
-        private Texture2D playerSpriteTexture;
-
-        Entity playerEntity;
-        private FSRigidBody playerBody;
+        Player playerEntity;
         Entity tiledEntity;
         private Entity debugViewEntity;
-        private float playerScale = 1.8f;
         private TmxMap tiledMap;
         internal static FSWorld world;
         private FSDebugView debugView;
 
-        DefaultRenderer renderer;
+        Renderer renderer;
 
         float zoomStep = 0.1f;
         private bool phDebug = false;
+        internal static Sprite sprite;
+        internal PenumbraComponent penumbra;
+        internal GameTime gameTime;
+        private PointLight _light;
+        
         public override void Initialize()
         {
             Graphics.Instance.Batcher.ShouldRoundDestinations = false;
             Graphics.Instance.Batcher.SetIgnoreRoundingDestinations(true);
 
             ClearColor = Color.Black;
-            renderer = new DefaultRenderer();
+            renderer = new MyRenderer();
             renderer.ShouldDebugRender = true;
             //Core.DebugRenderEnabled = true;
             AddRenderer(renderer);
             Camera.ZoomIn(0.2f);
-
+            
             FSConvert.SetDisplayUnitToSimUnitRatio(32);
             world = GetOrCreateSceneComponent<FSWorld>();
             world.TimeStep = 1 / 144f;
             world.World.Gravity = Vector2.Zero;
 
-            playerSpriteTexture = Texture2D.FromFile(Core.GraphicsDevice, "Content/assets/ClassicRPG_Sheet.png");
             tiledMap = Content.LoadTiledMap("Content/assets/tiledmap/newmap.tmx");
 
             debugView = new FSDebugView(world);
-            debugView.SetEnabled(false);
-            debugView.AppendFlags(FSDebugView.DebugViewFlags.Shape);
-            debugView.AppendFlags(FSDebugView.DebugViewFlags.AABB);
-            debugView.AppendFlags(FSDebugView.DebugViewFlags.DebugPanel);
-            debugView.AppendFlags(FSDebugView.DebugViewFlags.PolygonPoints);
-            debugView.AppendFlags(FSDebugView.DebugViewFlags.PerformanceGraph);
-            debugView.AppendFlags(FSDebugView.DebugViewFlags.CenterOfMass);
-            debugView.AppendFlags(DebugViewFlags.ContactPoints);
-            debugView.AppendFlags(DebugViewFlags.Joint);
-            debugView.AppendFlags(DebugViewFlags.Controllers);
-
-            //debugView.RemoveFlags(FSDebugView.DebugViewFlags.Shape);
-            debugView.RemoveFlags(FSDebugView.DebugViewFlags.AABB);
-            debugView.RemoveFlags(FSDebugView.DebugViewFlags.DebugPanel);
-            debugView.RemoveFlags(FSDebugView.DebugViewFlags.PolygonPoints);
-            debugView.RemoveFlags(FSDebugView.DebugViewFlags.PerformanceGraph);
-            debugView.RemoveFlags(FSDebugView.DebugViewFlags.CenterOfMass);
-            debugView.RemoveFlags(DebugViewFlags.ContactPoints);
-            debugView.RemoveFlags(DebugViewFlags.Joint);
-            debugView.RemoveFlags(DebugViewFlags.Controllers);
 
             tiledEntity = CreateEntity("tiledmap");
             tiledEntity.AddComponent(new TiledMapRenderer(tiledMap));
 
-            playerEntity = CreateEntity("player");
+            playerEntity = new Player("Demass");
+            AddEntity(playerEntity);
+            playerEntity.InitBody();
 
-            playerBody = new FSRigidBody();
-            FSCollisionCircle c = new FSCollisionCircle(15);
-            c.SetCollidesWith(Category.All);
-            c.SetCollisionCategories(Category.Cat1);
-            c.SetRestitution(0);
-            c.SetFriction(0.5f);
-            c.SetDensity(1);
-            playerBody.SetBodyType(BodyType.Dynamic);
-            playerBody.SetFixedRotation(true);
-            playerBody.SetMass(60f);
-            playerBody.SetLinearDamping(12f);
-
-            playerEntity
-                .SetScale(Vector2.One * playerScale)
-                .SetPosition(200, 200)
-                .AddComponent(playerBody)
-                .AddComponent(c)
-                .AddComponent(new BodySpriteRenderer(new Sprite(playerSpriteTexture, new Rectangle(16, 0, 16, 16))))
-                .AddComponent(new PlayerController());
-            
-
-            CreateEntity("debug-view")
+            debugViewEntity = CreateEntity("debug-view")
                 .AddComponent(new PressKeyToPerformAction(Keys.B, e =>
                 {
-                    //Core.DebugRenderEnabled = !Core.DebugRenderEnabled;
                    phDebug = !phDebug;
                 }))
-                .AddComponent(debugView).SetEnabled(false);
+                .AddComponent(debugView).SetEnabled(false).Entity;
             
             Camera.Entity.AddComponent(new FollowCamera(playerEntity));
+
+            penumbra = new PenumbraComponent(Core.Instance);
+            //penumbra.Debug = true;
+            penumbra.Initialize();
+            penumbra.AmbientColor = Color.Black;
+            new TiledBodiesLoader(this).LoadBodies(tiledMap);
             
-            TiledBodiesLoader.LoadBodies(tiledMap);
+            _light = new PointLight
+            {
+                Position = playerEntity.Position,
+                Color = Color.LightYellow,
+                Scale = new Vector2(1300),
+                ShadowType = ShadowType.Solid
+            };
+            penumbra.Lights.Add(_light);
+            Hull h = new Hull( new Vector2[4]{new Vector2(300, 300), new Vector2(350, 300), new Vector2(350, 350), new Vector2(300, 350)});
+            //h.Position = new Vector2(400, 400);
+            
+            // Adding the Hull to Penumbra
+            penumbra.Hulls.Add(h);
         }
+        
+        
         
         public override void Update()
         {
             base.Update();
+            
+            //penumbra.Transform = Camera.TransformMatrix;
+            //_light.Position = playerEntity.Position;
 
             if (Input.IsKeyPressed(Keys.OemPlus))
             {
@@ -128,11 +113,17 @@ namespace FirstGame.Game
             {
                 Camera.ZoomOut(zoomStep);
             }
+            penumbra.BeginDraw();
         }
 
         public override void Render()
         {
+            
             base.Render();
+           
+            // Core.GraphicsDevice.Clear(Color.White);
+            // penumbra.Draw(gameTime);
+            
 
             if (phDebug)
             {
@@ -141,5 +132,8 @@ namespace FirstGame.Game
                 Graphics.Instance.Batcher.End();
             }
         }
+
+        public MasterScene() : base()
+        { }
     }
 }

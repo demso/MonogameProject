@@ -21,10 +21,24 @@ public class Player : GameEntity
     }
     private FSRigidBody _closestObject;
     
-    Player(string name) : base(name)
+    internal Player(string name) : base(name)
+    {
+        _spriteRenderer = new BodySpriteRenderer(new Sprite(Texture2D.FromFile(Core.GraphicsDevice, "Content/assets/ClassicRPG_Sheet.png"),
+            new Rectangle(16, 0, 16, 16)));
+
+        AddComponent(_spriteRenderer);
+        AddComponent(new PlayerController());
+
+        Hp = 10;
+        MaxHp = Hp;
+        EntityKind = Kind.Player;
+        EntityFriendliness = Friendliness.Neutral;
+    }
+
+    internal void InitBody()
     {
         Body = new FSRigidBody();
-        FSCollisionCircle fixture = new FSCollisionCircle(13);
+        FSCollisionCircle fixture = new FSCollisionCircle(5);
         fixture.SetCollidesWith(Category.All);
         fixture.SetCollisionCategories(Category.Cat1);
         fixture.SetRestitution(0);
@@ -34,22 +48,16 @@ public class Player : GameEntity
         Body.SetFixedRotation(true);
         Body.SetMass(60f);
         Body.SetLinearDamping(12f);
+        AddComponent(Body);
+
         Body.Body.UserData = this;
-        
-        _spriteRenderer = new BodySpriteRenderer(new Sprite(Texture2D.FromFile(Core.GraphicsDevice, "Content/assets/ClassicRPG_Sheet.png"), new Rectangle(16, 0, 16, 16)));
+
+        AddComponent(fixture);
 
         Transform.SetScale(scale);
-        Transform.SetPosition(200, 200);
-        AddComponent(Body);
-        AddComponent(fixture);
-        AddComponent(_spriteRenderer);
-        AddComponent(new PlayerController());
-
-        Hp = 10;
-        MaxHp = Hp;
-        EntityKind = Kind.Player;
-        EntityFriendliness = Friendliness.Neutral;
+        Transform.SetPosition(50, 50);
     }
+    
 
     public override void Kill()
     {

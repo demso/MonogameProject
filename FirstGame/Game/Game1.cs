@@ -1,14 +1,16 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System;
+using Microsoft.Xna.Framework;
+using Penumbra;
 
 namespace FirstGame.Game
 {
 
     public class Game1 : Core
     {
-        static int width = 640;
-        static int height = 480;
+        static int width = 1920;
+        static int height = 1080;
         public Game1() : base(width, height)
         {
             IsMouseVisible = true;
@@ -26,8 +28,13 @@ namespace FirstGame.Game
             Scene.SamplerState = new SamplerState()
             {
                 Filter = TextureFilter.Anisotropic
-                
             };
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            ((MasterScene)Scene).gameTime = gameTime;
+            base.Draw(gameTime);
         }
     }
 }

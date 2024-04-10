@@ -1,16 +1,27 @@
 ﻿using System;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FirstGame.Game.entyties;
 using FirstGame.Game.factories;
+using Microsoft.Xna.Framework;
+using Nez.Farseer;
 using Nez.Tiled;
+using Penumbra;
 
 namespace FirstGame.Game.tiled;
 
 public class TiledBodiesLoader
 {
-    private static BodyTileResolver resolver;
-    private static World world;
-    public static void LoadBodies(TmxMap map)
+    private BodyTileResolver resolver;
+    private World world;
+    internal MasterScene _masterScene;
+
+    internal TiledBodiesLoader(MasterScene masterScene)
+    {
+        _masterScene = masterScene;
+    }
+
+    public void LoadBodies(TmxMap map)
     {
         world = MasterScene.world;
         resolver = new BodyTileResolver(world);
@@ -27,7 +38,12 @@ public class TiledBodiesLoader
                 continue;
             BodyTileResolver.Type realBodyType;
             Enum.TryParse(bodyType, true, out realBodyType);
-            resolver.resolveBody(ltile.X+0.5f, ltile.Y+0.5f, new SimpleBodyUserData(ltile, bodyType), realBodyType, resolver.getDirection(ltile));
+            Body body = resolver.resolveBody(ltile.X+0.5f, ltile.Y+0.5f, new SimpleBodyUserData(ltile, bodyType), realBodyType, resolver.getDirection(ltile));
+            
+            Hull h = new Hull( ((PolygonShape)body.FixtureList[0].Shape).Vertices);
+            h.Scale = new Vector2(FSConvert.SimToDisplay);
+            h.Position = body.DisplayPosition;
+            _masterScene.penumbra.Hulls.Add(h);
         }
     }
 }

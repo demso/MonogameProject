@@ -24,8 +24,12 @@
     <PackageReference Include="MonoGame.Penumbra.DesktopGL" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Box2DLight\Box2DLight.csproj" />
     <ProjectReference Include="..\Nez-master\Nez.FarseerPhysics\Nez.MG38.FarseerPhysics.csproj" />
     <ProjectReference Include="..\Nez-master\Nez.Portable\Nez.MG38.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Game\entyties\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
