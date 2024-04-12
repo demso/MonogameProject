@@ -38,7 +38,7 @@ namespace Box2DLight
         internal List<Light> lightList = new List<Light>();
         internal List<Light> disabledLights = new List<Light>();
 
-        internal LightMap lightMap;
+        public LightMap lightMap;
         internal Effect lightShader;
         internal Effect customLightShader = null;
 
@@ -142,6 +142,16 @@ namespace Box2DLight
             y2 = y + halfViewPortHeight;
         }
 
+        //public void setCombinedMatrix(Camera camera)
+        //{
+        //    this.setCombinedMatrix(
+        //        camera.ViewProjectionMatrix,
+        //        camera.Transform.Position.X,
+        //        camera.Transform.Position.Y,
+        //        camera.viewportWidth * camera.zoom,
+        //        camera.viewportHeight * camera.zoom);
+        //}
+
         public bool intersect(float x, float y, float radius)
         {
             return x1 < x + radius && x2 > x - radius &&
@@ -195,7 +205,7 @@ namespace Box2DLight
 
             if (useLightMap)
             {
-                
+
                 if (customViewport)
                 {
                     Core.GraphicsDevice.SetRenderTarget(null);
@@ -205,24 +215,20 @@ namespace Box2DLight
                 else
                 {
                     Core.GraphicsDevice.SetRenderTarget(null);
-                    Core.GraphicsDevice.Viewport = tempV;
+                    //Core.GraphicsDevice.Viewport = tempV;
                 }
             }
 
-            lightMap.spriteBatch.Begin();
-            lightMap.spriteBatch.Draw(lightMap.frameBuffer, Vector2.Zero, Color.White);
-            lightMap.spriteBatch.End();
 
-
-            bool needed = lightRenderedLastFrame > 0;
-            if (needed && blur)
-                lightMap.GaussianBlur(lightMap.frameBuffer, blurNum);
+            //bool needed = lightRenderedLastFrame > 0;
+            //if (needed && blur)
+            //    lightMap.GaussianBlur(lightMap.frameBuffer, blurNum);
         }
 
         public void render()
         {
            prepareRender();
-            lightMap.Render();
+           lightMap.Render();
         }
 
         public void renderOnly()

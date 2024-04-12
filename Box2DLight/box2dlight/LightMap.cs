@@ -10,11 +10,11 @@ using Nez;
 
 namespace Box2DLight
 {
-    class LightMap
+    public class LightMap
     {
         private GraphicsDevice graphicsDevice;
         private Effect shadowShader;
-        internal RenderTarget2D frameBuffer;
+        public RenderTarget2D frameBuffer;
         private RenderTarget2D pingPongBuffer;
         private VertexBuffer lightMapMesh;
 
@@ -42,7 +42,8 @@ namespace Box2DLight
             this.fboWidth = fboWidth;
             this.fboHeight = fboHeight;
             
-            frameBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.ColorSRgb, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+            frameBuffer = new RenderTarget2D(Core.GraphicsDevice, Core.GraphicsDevice.PresentationParameters.BackBufferWidth, Core.GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false, SurfaceFormat.ColorSRgb, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             pingPongBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.Color, DepthFormat.None);
 
             spriteBatch = new SpriteBatch(Core.GraphicsDevice);
@@ -59,6 +60,8 @@ namespace Box2DLight
             if (lightMapDrawingDisabled)
                 return;
 
+            
+
             // at last lights are rendered over scene
             if (rayHandler.shadows)
             {
@@ -67,12 +70,12 @@ namespace Box2DLight
                 if (RayHandler.isDiffuse)
                 {
                     shader = diffuseShader;
-                    rayHandler.diffuseBlendFunc.Apply();
+                    //rayHandler.diffuseBlendFunc.Apply();
                     shader.Parameters["Ambient"].SetValue(new Vector4(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f));
                 }
                 else
                 {
-                    rayHandler.shadowBlendFunc.Apply();
+                    //rayHandler.shadowBlendFunc.Apply();
                     shader.Parameters["Ambient"].SetValue(new Vector4((float)c.R * (float)c.A / 255f, (float)c.G * (float)c.A / 255f, (float)c.B * (float)c.A / 255f, 1f - (float)c.A / 255f));
                 }
 
@@ -82,14 +85,14 @@ namespace Box2DLight
             }
             else if (needed)
             {
-                rayHandler.simpleBlendFunc.Apply();
+                //rayHandler.simpleBlendFunc.Apply();
                 withoutShadowShader.CurrentTechnique.Passes[0].Apply();
 
                 graphicsDevice.SetVertexBuffer(lightMapMesh);
                 graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
             }
 
-            graphicsDevice.BlendState = (BlendState.Opaque);
+            //graphicsDevice.BlendState = (BlendState.Opaque);
         }
 
         public void GaussianBlur(RenderTarget2D buffer, int blurNum)

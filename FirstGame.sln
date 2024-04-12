@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez.MG38", "Nez-master\Nez.Portable\Nez.MG38.csproj", "{ED6672AF-746F-4CAD-A204-54CD3FC41592}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez.MG38.FarseerPhysics", "Nez-master\Nez.FarseerPhysics\Nez.MG38.FarseerPhysics.csproj", "{61EC8E48-EFDC-4304-BCC9-00E4F579C7FD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirstGame", "FirstGame\FirstGame.csproj", "{516B26C5-1320-424F-8664-0037FCFB5AD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Box2DLight", "Box2DLight\Box2DLight.csproj", "{A4B9F9F5-F78B-443A-AA44-CA2C293C2A9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Box2DLight", "Box2DLight\Box2DLight.csproj", "{A4B9F9F5-F78B-443A-AA44-CA2C293C2A9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,14 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ED6672AF-746F-4CAD-A204-54CD3FC41592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED6672AF-746F-4CAD-A204-54CD3FC41592}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED6672AF-746F-4CAD-A204-54CD3FC41592}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED6672AF-746F-4CAD-A204-54CD3FC41592}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61EC8E48-EFDC-4304-BCC9-00E4F579C7FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61EC8E48-EFDC-4304-BCC9-00E4F579C7FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61EC8E48-EFDC-4304-BCC9-00E4F579C7FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61EC8E48-EFDC-4304-BCC9-00E4F579C7FD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{516B26C5-1320-424F-8664-0037FCFB5AD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{516B26C5-1320-424F-8664-0037FCFB5AD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{516B26C5-1320-424F-8664-0037FCFB5AD6}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -38,7 +38,7 @@ namespace FirstGame.Game
         internal PenumbraComponent penumbra;
         internal GameTime gameTime;
         private PointLight _light;
-        private RayHandler rh;
+        internal RayHandler rh;
         static SpriteBatch spriteBatch;
 
         public override void Initialize()
@@ -78,29 +78,10 @@ namespace FirstGame.Game
                 .AddComponent(debugView).SetEnabled(false).Entity;
             
             Camera.Entity.AddComponent(new FollowCamera(playerEntity));
-
-            //penumbra = new PenumbraComponent(Core.Instance);
-            //penumbra.Debug = true;
-            //penumbra.Initialize();
-            //penumbra.AmbientColor = Color.Black;
             new TiledBodiesLoader(this).LoadBodies(tiledMap);
 
-            //_light = new PointLight
-            //{
-            //    Position = playerEntity.Position,
-            //    Color = Color.LightYellow,
-            //    Scale = new Vector2(1300),
-            //    ShadowType = ShadowType.Solid
-            //};
-            //penumbra.Lights.Add(_light);
-            //Hull h = new Hull( new Vector2[4]{new Vector2(300, 300), new Vector2(350, 300), new Vector2(350, 350), new Vector2(300, 350)});
-            ////h.Position = new Vector2(400, 400);
-
-            //// Adding the Hull to Penumbra
-            //penumbra.Hulls.Add(h);
-
             rh = new RayHandler(world.World);
-            rh.setCombinedMatrix(Camera.ViewProjectionMatrix);
+            rh.setCombinedMatrix(Camera.ViewProjectionMatrix, Core.GraphicsDevice.Viewport.X, Core.GraphicsDevice.Viewport.Y, Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height);
             RayHandler.useDiffuseLight(true);
             rh.setAmbientLight(0.5f, 0.5f, 0.5f, 0.5f);
             rh.setBlur(false);
@@ -108,6 +89,7 @@ namespace FirstGame.Game
 
             Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 5, Color.White, 300, 0 , 0);
             //light.AttachToBody(playerEntity.Body.Body);
+            //light.SetIgnoreAttachedBody(true);
         }
         
         
@@ -115,9 +97,6 @@ namespace FirstGame.Game
         public override void Update()
         {
             base.Update();
-            
-            //penumbra.Transform = Camera.TransformMatrix;
-            //_light.Position = playerEntity.Position;
 
             if (Input.IsKeyPressed(Keys.OemPlus))
             {
@@ -127,22 +106,30 @@ namespace FirstGame.Game
             {
                 Camera.ZoomOut(zoomStep);
             }
-            //penumbra.BeginDraw();
         }
 
         public override void Render()
         {
-            //base.Render();
+            base.Render();
 
-            rh.setCombinedMatrix(Camera.ViewProjectionMatrix);
-            rh.updateAndRender();
+            //this.SceneRenderTarget;
+            //Core.GraphicsDevice.SetRenderTarget(renderTarget);
+            //Core.GraphicsDevice.Clear(Color.Red);
+            //Core.GraphicsDevice.SetRenderTarget(SceneRenderTarget);
+            //Core.GraphicsDevice.Clear(Color.Black);
 
-            if (phDebug)
-            {
-                Graphics.Instance.Batcher.Begin();
-                debugView.Render(Graphics.Instance.Batcher, Camera);
-                Graphics.Instance.Batcher.End();
-            }
+
+            //    spriteBatch.Begin(SpriteSortMode.Immediate);
+            //    spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
+            //    spriteBatch.End();
+
+
+            //if (phDebug)
+            //{
+            //    Graphics.Instance.Batcher.Begin();
+            //    debugView.Render(Graphics.Instance.Batcher, Camera);
+            //    Graphics.Instance.Batcher.End();
+            //}
         }
 
         public MasterScene() : base()

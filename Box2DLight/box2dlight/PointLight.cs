@@ -88,9 +88,13 @@ namespace Box2dLight
             {
                 float angle = angleNum * i;
                 sin[i] = (float) Math.Sin(MathHelper.ToRadians(angle));
+                if (Math.Abs(sin[i]) < 0.001)
+                    sin[i] = 0;
                 cos[i] = (float) Math.Cos(MathHelper.ToRadians(angle));
-                endX[i] = distance * cos[i];
+                if (Math.Abs(cos[i]) < 0.001)
+                    cos[i] = 0;
                 endY[i] = distance * sin[i];
+                endX[i] = distance * cos[i];
             }
         }
 
