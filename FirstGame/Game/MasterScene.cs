@@ -93,7 +93,7 @@ namespace FirstGame.Game
             rh.setCombinedMatrix(Camera.ViewProjectionMatrix, 0, 0, Core.GraphicsDevice.DisplayMode.Width, Core.GraphicsDevice.DisplayMode.Height);
             RayHandler.useDiffuseLight(true);
             rh.setAmbientLight(0f, 0f, 0f, 1f);
-            //rh.setBlur();
+            rh.setBlur(true);
             rh.setBlurNum(3);
 
             Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 1300, Color.White, 50, 0 , 0);
