@@ -79,31 +79,13 @@ namespace Box2DLight
 
                     Core.GraphicsDevice.SetRenderTarget(null);
 
-                    Core.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
+                    spriteBatch.End();
 
-                    Core.GraphicsDevice.Textures[0] = rayHandler.renTar;
-                    Core.GraphicsDevice.SetVertexBuffer(lightMapMesh);
-                    Core.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
-
-
-                    Core.GraphicsDevice.SetRenderTarget(null);
-
-                    Core.GraphicsDevice.BlendState = blFn.Get();
-
-                    Core.GraphicsDevice.Textures[0] = frameBuffer;
-                    Core.GraphicsDevice.SetVertexBuffer(lightMapMesh);
-                    Core.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
-
-
-                    //spriteBatch.Begin();
-                    //spriteBatch.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    //spriteBatch.End();
-
-                    //spriteBatch.Begin(blendState: blFn.Get());
-                    //spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    //spriteBatch.End();
-
-
+                    spriteBatch.Begin(blendState: blFn.Get());
+                    spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
+                    spriteBatch.End();
                 }
                 else
                 {
