@@ -142,7 +142,7 @@ namespace Box2DLight
                 }
 
                 Core.GraphicsDevice.SetRenderTarget(frameBuffer);
-                spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                spriteBatch.Begin();
                 spriteBatch.Draw(pingPongBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
                 spriteBatch.End();
 

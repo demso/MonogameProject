@@ -98,17 +98,13 @@ namespace FirstGame.Game
 
             Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 1300, Color.White, 50, 0 , 0);
             light.SetSoft(true);
-            light.SetColor(1,1,1,1);
             light.SetSoftnessLength(1.5f);
             light.AttachToBody(playerEntity.Body.Body);
             light.SetIgnoreAttachedBody(true);
         }
         
-        
-        
         public override void Update()
         {
-           //Camera.Entity.Transform.Position = playerEntity.Body.Body.DisplayPosition;
             base.Update();
 
             if (Input.IsKeyPressed(Keys.OemPlus))
@@ -123,6 +119,7 @@ namespace FirstGame.Game
 
         public override void Render()
         {
+            ClearColor = Color.AliceBlue;
             base.Render();
         }
 

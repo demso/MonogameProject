@@ -72,7 +72,6 @@ float4 MainPS(VertexShaderOutput input) : COLOR
             center * tex2D(RenderTargetSampler, input.TexCoords2).rgb +
             close * tex2D(RenderTargetSampler, input.TexCoords3).rgb +
             far * tex2D(RenderTargetSampler, input.TexCoords4).rgb;
-        //FragColor.a = tex2D(RenderTargetSampler, input.TexCoords0).a;
         return FragColor;
     }
     else
