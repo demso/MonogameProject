@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.10.2" name="normal_terrain" tilewidth="32" tileheight="32" tilecount="4432" columns="16">
  <image source="../normal_terrain.png" width="512" height="8864"/>
- <tile id="109" type="door"/>
- <tile id="110" type="door"/>
- <tile id="142" type="door">
+ <tile id="109" type="door">
   <properties>
-   <property name="name" value="closedDoor"/>
+   <property name="body type" value="fullbody"/>
+   <property name="name" value="closeddoor"/>
   </properties>
  </tile>
- <tile id="143" type="door"/>
- <tile id="144" type="door"/>
- <tile id="145" type="door"/>
+ <tile id="110" type="door">
+  <properties>
+   <property name="body type" value="fullbody"/>
+   <property name="name" value="closeddoor"/>
+  </properties>
+ </tile>
+ <tile id="142" type="door">
+  <properties>
+   <property name="body type" value="fullbody"/>
+   <property name="name" value="closeddoor"/>
+  </properties>
+ </tile>
+ <tile id="143" type="door">
+  <properties>
+   <property name="body type" value="fullbody"/>
+   <property name="name" value="closeddoor"/>
+  </properties>
+ </tile>
+ <tile id="144" type="door">
+  <properties>
+   <property name="body type" value="fullbody"/>
+   <property name="name" value="closeddoor"/>
+  </properties>
+ </tile>
+ <tile id="145" type="door">
+  <properties>
+   <property name="body type" value="fullbody"/>
+   <property name="name" value="closeddoor"/>
+  </properties>
+ </tile>
  <tile id="159" type="door"/>
  <tile id="160" type="door">
   <properties>
@@ -151,17 +177,25 @@
  </tile>
  <tile id="4368" type="window">
   <properties>
+   <property name="body type" value="window"/>
    <property name="name" value="windowCurtained"/>
   </properties>
  </tile>
  <tile id="4369" type="window">
   <properties>
+   <property name="body type" value="window"/>
    <property name="name" value="window0"/>
   </properties>
  </tile>
  <tile id="4370" type="window">
   <properties>
+   <property name="body type" value="window"/>
    <property name="name" value="window1"/>
+  </properties>
+ </tile>
+ <tile id="4384">
+  <properties>
+   <property name="body type" value="window"/>
   </properties>
  </tile>
  <wangsets>

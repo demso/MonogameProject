@@ -40,6 +40,7 @@ namespace FirstGame.Game
         private PointLight _light;
         internal RayHandler rh;
         static SpriteBatch spriteBatch;
+        public bool Toggle;
 
         public override void Initialize()
         {
@@ -70,7 +71,11 @@ namespace FirstGame.Game
             tiledEntity.AddComponent(new TiledMapRenderer(tiledMap));
 
             playerEntity = new Player("Demass");
-            AddEntity(playerEntity);
+            AddEntity(playerEntity)
+                .AddComponent(new PressKeyToPerformAction(Keys.N, e =>
+                {
+                    Toggle = !Toggle;
+                }));
             playerEntity.InitBody();
 
             debugViewEntity = CreateEntity("debug-view")

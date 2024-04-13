@@ -86,8 +86,10 @@ public class BodyTileResolver
 
         Fixture fixture = direction switch
         {
-            (Direction.North or Direction.South) => FixtureFactory.AttachRectangle(1f, 0.1f, 1, Vector2.Zero, body),
-            (Direction.East or Direction.West) => FixtureFactory.AttachRectangle(0.1f, 1f, 1, Vector2.Zero, body)
+            (Direction.North) => FixtureFactory.AttachRectangle(1f, 0.1f, 1, new Vector2(0, -0.4f), body),
+            (Direction.South) => FixtureFactory.AttachRectangle(1f, 0.1f, 1, new Vector2(0, 0.4f), body),
+            (Direction.East) => FixtureFactory.AttachRectangle(0.1f, 1f, 1, new Vector2(0.4f, 0), body),
+            (Direction.West) => FixtureFactory.AttachRectangle(0.1f, 1f, 1, new Vector2(-0.4f, 0), body)
         };
 
         fixture.CollisionGroup = -Globals.LightCG;
