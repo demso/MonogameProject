@@ -85,7 +85,8 @@ namespace FirstGame.Game
                 }))
                 .AddComponent(debugView).SetEnabled(false).Entity;
             
-            //Camera.Entity.AddComponent(new FollowCamera(playerEntity));
+            Camera.Entity.AddComponent(new FollowCamera(playerEntity));
+            Camera.ZoomIn(zoomStep * 4);
             new TiledBodiesLoader(this).LoadBodies(tiledMap);
 
             
@@ -98,7 +99,7 @@ namespace FirstGame.Game
             Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 1300, Color.White, 50, 0 , 0);
             light.SetSoft(true);
             light.SetColor(1,1,1,1);
-            light.SetSoftnessLength(1);
+            light.SetSoftnessLength(1.5f);
             light.AttachToBody(playerEntity.Body.Body);
             light.SetIgnoreAttachedBody(true);
         }
@@ -107,7 +108,7 @@ namespace FirstGame.Game
         
         public override void Update()
         {
-           Camera.Entity.Transform.Position = playerEntity.Body.Body.DisplayPosition;
+           //Camera.Entity.Transform.Position = playerEntity.Body.Body.DisplayPosition;
             base.Update();
 
             if (Input.IsKeyPressed(Keys.OemPlus))

@@ -55,7 +55,7 @@ public class Player : GameEntity
         AddComponent(fixture);
 
         Transform.SetScale(scale);
-        Transform.SetPosition(50, 50);
+        Transform.SetPosition(350, 350);
     }
     
 

@@ -11,8 +11,8 @@ namespace FirstGame.Game
 
     public class Game1 : Core
     {
-        static int width = 640;
-        static int height = 480;
+        static int width = 1280;
+        static int height = 720;
         SpriteBatch spriteBatch;
         public Game1() : base(width, height)
         {
