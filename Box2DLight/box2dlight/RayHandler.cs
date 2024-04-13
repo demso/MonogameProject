@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FarseerPhysics.Dynamics;
 using Nez;
 using Box2DLight.box2dlight.shaders;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Box2DLight
 {
@@ -26,9 +27,9 @@ namespace Box2DLight
 
         internal static bool isDiffuse = false;
 
-        public BlendFunc diffuseBlendFunc = new BlendFunc(Blend.One, Blend.Zero);
+        public BlendFunc diffuseBlendFunc = new BlendFunc(Blend.DestinationColor, Blend.Zero);
 
-        public BlendFunc shadowBlendFunc = new BlendFunc(Blend.One, Blend.SourceAlpha);
+        public BlendFunc shadowBlendFunc = new BlendFunc(Blend.One, Blend.InverseSourceAlpha);
 
         public BlendFunc simpleBlendFunc = new BlendFunc(Blend.SourceAlpha, Blend.One);
 
@@ -49,7 +50,7 @@ namespace Box2DLight
         internal bool pseudo3d = false;
         bool shadowColorInterpolation = false;
 
-        int blurNum = 1;
+        internal int blurNum = 1;
 
         bool customViewport = false;
         int viewportX = 0;
@@ -61,7 +62,12 @@ namespace Box2DLight
 
         float x1, x2, y1, y2;
 
+        public int SimToDisplay = 32;
+
         internal World world;
+
+        internal RenderTarget2D renTar;
+        private int[] data;
 
         public RayHandler(World world) : this(world, null)
         {
@@ -88,7 +94,10 @@ namespace Box2DLight
                 pseudo3d = options.pseudo3d;
                 shadowColorInterpolation = options.shadowColorInterpolation;
             }
-
+            int w = Core.GraphicsDevice.PresentationParameters.BackBufferWidth;
+            int h = Core.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            renTar = new RenderTarget2D(Core.GraphicsDevice, w, h);
+            data = new int[w * h];
             resizeFBO(fboWidth, fboHeight);
             lightShader = LightShader.createLightShader();
             
@@ -180,13 +189,21 @@ namespace Box2DLight
             Core.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             bool useLightMap = shadows || blur;
-            Viewport tempV = Core.GraphicsDevice.Viewport;
             if (useLightMap)
             {
+                int w = Core.GraphicsDevice.PresentationParameters.BackBufferWidth;
+                int h = Core.GraphicsDevice.PresentationParameters.BackBufferHeight;
+                if (w != renTar.Width || h != renTar.Height)
+                {
+                    renTar = new RenderTarget2D(Core.GraphicsDevice, w, h);
+                    data = new int[w * h];
+                }
+
+                Core.GraphicsDevice.GetBackBufferData(data);
+                renTar.SetData(data);
+                
                 Core.GraphicsDevice.SetRenderTarget(lightMap.frameBuffer);
-                Core.GraphicsDevice.Viewport = new Viewport(0, 0, lightMap.frameBuffer.Bounds.Width,
-                    lightMap.frameBuffer.Bounds.Height);
-                Core.GraphicsDevice.Clear(Color.Red);
+                Core.GraphicsDevice.Clear(Color.Transparent);
             }
 
             simpleBlendFunc.Apply();
@@ -195,7 +212,6 @@ namespace Box2DLight
 
             shader.CurrentTechnique.Passes[0].Apply();
             shader.Parameters["WorldViewProjection"].SetValue(combined);
-            if (customLightShader != null) updateLightShader();
 
             foreach (Light light in lightList)
             {
@@ -203,26 +219,9 @@ namespace Box2DLight
                 light.Render();
             }
 
-            if (useLightMap)
-            {
-
-                if (customViewport)
-                {
-                    Core.GraphicsDevice.SetRenderTarget(null);
-                    Core.GraphicsDevice.Viewport = new Viewport(viewportX, viewportY, viewportWidth,
-                        viewportHeight);
-                }
-                else
-                {
-                    Core.GraphicsDevice.SetRenderTarget(null);
-                    //Core.GraphicsDevice.Viewport = tempV;
-                }
-            }
-
-
-            //bool needed = lightRenderedLastFrame > 0;
-            //if (needed && blur)
-            //    lightMap.GaussianBlur(lightMap.frameBuffer, blurNum);
+            bool needed = lightRenderedLastFrame > 0;
+            if (needed && blur)
+                lightMap.GaussianBlur();
         }
 
         public void render()
@@ -264,27 +263,28 @@ namespace Box2DLight
             return true;
         }
 
-        //public void Dispose()
-        //{
-        //    removeAll();
-        //    if (lightMap != null) lightMap.Dispose();
-        //    if (lightShader != null) lightShader.Dispose();
-        //}
+        public void Dispose()
+        {
+            removeAll();
+            renTar.Dispose();
+            if (lightMap != null) lightMap.Dispose();
+            if (lightShader != null) lightShader.Dispose();
+        }
 
-        //public void removeAll()
-        //{
-        //    foreach (Light light in lightList)
-        //    {
-        //        light.dispose();
-        //    }
-        //    lightList.Clear();
+        public void removeAll()
+        {
+            foreach (Light light in lightList)
+            {
+                light.Dispose();
+            }
+            lightList.Clear();
 
-        //    foreach (Light light in disabledLights)
-        //    {
-        //        light.dispose();
-        //    }
-        //    disabledLights.Clear();
-        //}
+            foreach (Light light in disabledLights)
+            {
+                light.Dispose();
+            }
+            disabledLights.Clear();
+        }
 
         public void setLightShader(Effect customLightShader)
         {
@@ -383,11 +383,6 @@ namespace Box2DLight
         public RenderTarget2D getLightMapBuffer()
         {
             return lightMap.frameBuffer;
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

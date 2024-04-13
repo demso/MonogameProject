@@ -7,7 +7,7 @@
 #define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-float4 Ambient;
+//matrix WorldViewProjection;
 Texture2D RenderTargetTexture;
 sampler2D RenderTargetSampler = sampler_state
 {
@@ -16,8 +16,8 @@ sampler2D RenderTargetSampler = sampler_state
 
 struct VertexShaderInput
 {
-    float4 Position : POSITION0;
-    float2 TexCoords : TEXCOORD0;
+    float4 APosition : POSITION0;
+    float2 ATexCoords : TEXCOORD0;
 };
 
 struct VertexShaderOutput
@@ -30,19 +30,15 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     VertexShaderOutput output = (VertexShaderOutput) 0;
 
-    output.Position = input.Position;
-    output.TexCoords = input.TexCoords;
+    output.Position = input.APosition; //mul(input.APosition, WorldViewProjection);
+    output.TexCoords = input.APosition;
 
     return output;
 }
 
-float4 MainPS(VertexShaderOutput input) : SV_TARGET
+float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    float4 c = tex2D(RenderTargetSampler, input.TexCoords);
-    float4 tempColor = Ambient;
-    tempColor.rgb = (c.rgb * c.a + Ambient.rgb);
-    tempColor.a = Ambient.a - c.a;
-    return tempColor;
+    return tex2D(RenderTargetSampler, input.TexCoords);
 }
 
 technique BasicColorDrawing

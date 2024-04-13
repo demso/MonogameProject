@@ -324,7 +324,7 @@ namespace Box2DLight
             get => _collisionGroup;
         }
 
-        internal float ray (Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+        internal float ray(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
         {
             if ((GlobalCollidesWith != null || GlobalCollisionGroup != 0) && !GlobalContactFilter(fixture))
                 return -1;

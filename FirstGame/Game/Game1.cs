@@ -3,6 +3,8 @@ using Nez;
 using System;
 using Microsoft.Xna.Framework;
 using Penumbra;
+using Nez.Farseer;
+using System.Diagnostics;
 
 namespace FirstGame.Game
 {
@@ -11,7 +13,6 @@ namespace FirstGame.Game
     {
         static int width = 640;
         static int height = 480;
-        private RenderTarget2D renderTarget;
         SpriteBatch spriteBatch;
         public Game1() : base(width, height)
         {
@@ -24,35 +25,32 @@ namespace FirstGame.Game
         protected override void Initialize()
         {
             base.Initialize();
-            
-            Scene = new MasterScene();
+
+            msc = new MasterScene();
+            Scene = msc;
             Scene.SetDefaultDesignResolution(width, height, Scene.SceneResolutionPolicy.None);
             Scene.SamplerState = new SamplerState()
             {
                 Filter = TextureFilter.Anisotropic
             };
-            spriteBatch = new SpriteBatch(GraphicsDevice);  
-            renderTarget = new RenderTarget2D(Core.GraphicsDevice, Core.GraphicsDevice.PresentationParameters.BackBufferWidth, Core.GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false, SurfaceFormat.ColorSRgb, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
+        private MasterScene msc;
         protected override void Draw(GameTime gameTime)
         {
+            
             ((MasterScene)Scene).gameTime = gameTime;
             base.Draw(gameTime);
 
-            //((MasterScene)Scene).rh.setCombinedMatrix(Scene.Camera.ViewProjectionMatrix);
+
             ((MasterScene)Scene).rh.updateAndRender();
+            ((MasterScene)Scene).rh.setCombinedMatrix(Scene.Camera.ViewProjectionMatrix, 0, 0, GraphicsDevice.DisplayMode.Width, GraphicsDevice.DisplayMode.Height);
 
-            //Core.GraphicsDevice.SetRenderTarget(renderTarget);
-            //Core.GraphicsDevice.Clear(Color.Red);
-            //Core.GraphicsDevice.SetRenderTarget(null);
-            //Core.GraphicsDevice.Clear(Color.Black);
-
-
-            //spriteBatch.Begin(SpriteSortMode.Immediate);
-            //spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
-            //spriteBatch.End();
+            if (msc.phDebug)
+            {
+                msc.debugView.Render(Graphics.Instance.Batcher, msc.Camera);
+            }
         }
     }
 }

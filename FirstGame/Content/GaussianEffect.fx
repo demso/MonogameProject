@@ -43,8 +43,10 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 {
 	VertexShaderOutput output = (VertexShaderOutput)0;
     
-    futher.xy = float2(3.2307692308 / FBO_W, 3.2307692308 / FBO_H);
-    closer.xy = float2(1.3846153846 / FBO_W, 1.3846153846 / FBO_H);
+    futher.x = 3.2307692308 / FBO_W;
+    futher.y = 3.2307692308 / FBO_H;
+    closer.x = 1.3846153846 / FBO_W;
+    closer.y = 1.3846153846 / FBO_H;
 
     float2 f = futher * dir;
     float2 c = closer * dir;
@@ -70,7 +72,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
             center * tex2D(RenderTargetSampler, input.TexCoords2).rgb +
             close * tex2D(RenderTargetSampler, input.TexCoords3).rgb +
             far * tex2D(RenderTargetSampler, input.TexCoords4).rgb;
-        FragColor.a = tex2D(RenderTargetSampler, input.TexCoords0).a;
+        //FragColor.a = tex2D(RenderTargetSampler, input.TexCoords0).a;
         return FragColor;
     }
     else

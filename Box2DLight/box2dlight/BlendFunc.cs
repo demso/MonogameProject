@@ -45,4 +45,17 @@ public class BlendFunc
 
         Core.GraphicsDevice.BlendState = bs;
     }
+
+    public BlendState Get()
+    {
+        // Assuming you have imported the appropriate OpenGL library
+        BlendState bs = new BlendState();
+        bs.Name = "mycustomblendstate";
+        bs.AlphaSourceBlend = Sfactor;
+        bs.ColorSourceBlend = Sfactor;
+        bs.AlphaDestinationBlend = Dfactor;
+        bs.ColorDestinationBlend = Dfactor;
+
+        return bs;
+    }
 }

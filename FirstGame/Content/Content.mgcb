@@ -94,3 +94,33 @@
 #begin assets/tiledmap/wide.png
 /copy:assets/tiledmap/wide.png
 
+#begin DiffuseEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:DiffuseEffect.fx
+
+#begin GaussianEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:GaussianEffect.fx
+
+#begin LightEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:LightEffect.fx
+
+#begin ShadowEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:ShadowEffect.fx
+
+#begin WithoutEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:WithoutEffect.fx
+

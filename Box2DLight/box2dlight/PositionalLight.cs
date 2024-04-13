@@ -29,6 +29,8 @@ namespace Box2DLight
         protected float[] endX;
         protected float[] endY;
 
+        private CustomVertex[] vertices;
+
         public PositionalLight(RayHandler rayHandler, int rays, Color color, float distance, float x, float y, float directionDegree) : base(rayHandler, rays, color, distance, directionDegree)
         {
             start.X = x;
@@ -36,6 +38,7 @@ namespace Box2DLight
 
             lightMesh = new VertexBuffer(Core.GraphicsDevice, typeof(CustomVertex), lightVertexNum + 10, BufferUsage.WriteOnly);
             softShadowMesh = new VertexBuffer(Core.GraphicsDevice, typeof(CustomVertex), softShadowVertexNum + 10, BufferUsage.WriteOnly);
+            vertices = new CustomVertex[lightVertexNum];
             SetMesh();
         }
 
@@ -52,7 +55,7 @@ namespace Box2DLight
             public static readonly VertexDeclaration VertexDeclaration = new(
                 new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 0),
                 new VertexElement(8, VertexElementFormat.Color, VertexElementUsage.Color, 0),
-                new VertexElement(4, VertexElementFormat.Single, VertexElementUsage.Fog, 0)
+                new VertexElement(12, VertexElementFormat.Single, VertexElementUsage.Fog, 0)
             );
         }
 
@@ -183,22 +186,21 @@ namespace Box2DLight
                         start.X, start.Y, distance + softShadowLength);
             return culled;
         }
-
+        Transform tempBodyTransform = new Transform();
         protected void UpdateBody()
         {
             if (body == null || staticLight) return;
 
-            Vector2 vec = body.DisplayPosition;
-            Transform tr = new Transform();
-            body.GetTransform(out tr);
-            float angle = tr.Q.GetAngle();
-            float cos = tr.Q.C;
-            float sin = tr.Q.S;
+            Vector2 vec = body.Position;
+            body.GetTransform(out tempBodyTransform);
+            float angle = tempBodyTransform.Q.GetAngle();
+            float cos = tempBodyTransform.Q.C;
+            float sin = tempBodyTransform.Q.S;
             float dX = bodyOffsetX * cos - bodyOffsetY * sin;
             float dY = bodyOffsetX * sin + bodyOffsetY * cos;
             start.X = vec.X + dX;
             start.Y = vec.Y + dY;
-            SetDirection(bodyAngleOffset + (float) (angle * (180f / Math.PI))); // rads to degrees
+            SetDirection(bodyAngleOffset + (float) (angle * Mathf.Rad2Deg)); // rads to degrees
         }
 
         protected void UpdateMesh()
@@ -219,46 +221,43 @@ namespace Box2DLight
             SetMesh();
         }
 
-
+        int size = 0;
+        int tempIndex = 0;
         protected void SetMesh()
         {
             // ray starting point
-            int size = 0;
-            int tempIndex = 0;
 
-            CustomVertex[] vertices = new CustomVertex[lightVertexNum];
+            size = 0;
+            tempIndex = 0;
             Vector2 tmpVec = new Vector2();
             for (int i = 0; i < rayNum; i += 1)
             {
-                vertices[size] = new CustomVertex(start, color, 1);
+                vertices[size] = new CustomVertex(start * rayHandler.SimToDisplay, color, 1);
                 size++;
                 tmpVec.X = mx[tempIndex];
                 tmpVec.Y = my[tempIndex];
-                vertices[size] = new CustomVertex(tmpVec, color, 1 - f[tempIndex]);
+                vertices[size] = new CustomVertex(tmpVec * rayHandler.SimToDisplay, color, 1 - f[tempIndex]);
                 size++;
                 tempIndex++;
                 tmpVec.X = mx[tempIndex];
                 tmpVec.Y = my[tempIndex];
-                vertices[size] = new CustomVertex(tmpVec, color, 1 - f[tempIndex]);
+                vertices[size] = new CustomVertex(tmpVec * rayHandler.SimToDisplay, color, 1 - f[tempIndex]);
                 size++;
             }
-
             lightMesh.SetData(vertices, 0, size);
 
             if (!soft || xray || rayHandler.pseudo3d) return;
 
-            vertices = new CustomVertex[softShadowVertexNum];
             size = 0;
-            tempIndex = 0;
             for (int i = 0; i < rayNum; i++)
             {
                 tmpVec.X = mx[i];
                 tmpVec.Y = my[i];
                 float s = 1 - f[i];
-                vertices[size++] = new CustomVertex(tmpVec, color, s);
+                vertices[size++] = new CustomVertex(tmpVec * rayHandler.SimToDisplay, color, s);
                 tmpVec.X = mx[i] + s * softShadowLength * cos[i];
                 tmpVec.Y = my[i] + s * softShadowLength * sin[i];
-                vertices[size++] = new CustomVertex(tmpVec, Color.Transparent, 0);
+                vertices[size++] = new CustomVertex(tmpVec * rayHandler.SimToDisplay, Color.Transparent, 0);
             }
             softShadowMesh.SetData(vertices, 0, size);
         }

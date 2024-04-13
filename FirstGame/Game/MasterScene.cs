@@ -28,12 +28,12 @@ namespace FirstGame.Game
         private Entity debugViewEntity;
         private TmxMap tiledMap;
         internal static FSWorld world;
-        private FSDebugView debugView;
+        internal FSDebugView debugView;
 
         Renderer renderer;
 
         float zoomStep = 0.1f;
-        private bool phDebug = false;
+        internal bool phDebug = false;
         internal static Sprite sprite;
         internal PenumbraComponent penumbra;
         internal GameTime gameTime;
@@ -59,6 +59,9 @@ namespace FirstGame.Game
             world.TimeStep = 1 / 144f;
             world.World.Gravity = Vector2.Zero;
 
+            rh = new RayHandler(world.World);
+            //AddRenderer(new LightRenderer(rh));
+
             tiledMap = Content.LoadTiledMap("Content/assets/tiledmap/newmap.tmx");
 
             debugView = new FSDebugView(world);
@@ -73,29 +76,33 @@ namespace FirstGame.Game
             debugViewEntity = CreateEntity("debug-view")
                 .AddComponent(new PressKeyToPerformAction(Keys.B, e =>
                 {
-                   phDebug = !phDebug;
+                    phDebug = !phDebug;
                 }))
                 .AddComponent(debugView).SetEnabled(false).Entity;
             
-            Camera.Entity.AddComponent(new FollowCamera(playerEntity));
+            //Camera.Entity.AddComponent(new FollowCamera(playerEntity));
             new TiledBodiesLoader(this).LoadBodies(tiledMap);
 
-            rh = new RayHandler(world.World);
-            rh.setCombinedMatrix(Camera.ViewProjectionMatrix, Core.GraphicsDevice.Viewport.X, Core.GraphicsDevice.Viewport.Y, Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height);
+            
+            rh.setCombinedMatrix(Camera.ViewProjectionMatrix, 0, 0, Core.GraphicsDevice.DisplayMode.Width, Core.GraphicsDevice.DisplayMode.Height);
             RayHandler.useDiffuseLight(true);
-            rh.setAmbientLight(0.5f, 0.5f, 0.5f, 0.5f);
-            rh.setBlur(false);
-            rh.setBlurNum(0);
+            rh.setAmbientLight(0f, 0f, 0f, 1f);
+            //rh.setBlur();
+            rh.setBlurNum(3);
 
-            Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 5, Color.White, 300, 0 , 0);
-            //light.AttachToBody(playerEntity.Body.Body);
-            //light.SetIgnoreAttachedBody(true);
+            Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 1300, Color.White, 50, 0 , 0);
+            light.SetSoft(true);
+            light.SetColor(1,1,1,1);
+            light.SetSoftnessLength(1);
+            light.AttachToBody(playerEntity.Body.Body);
+            light.SetIgnoreAttachedBody(true);
         }
         
         
         
         public override void Update()
         {
+           Camera.Entity.Transform.Position = playerEntity.Body.Body.DisplayPosition;
             base.Update();
 
             if (Input.IsKeyPressed(Keys.OemPlus))
@@ -111,28 +118,16 @@ namespace FirstGame.Game
         public override void Render()
         {
             base.Render();
-
-            //this.SceneRenderTarget;
-            //Core.GraphicsDevice.SetRenderTarget(renderTarget);
-            //Core.GraphicsDevice.Clear(Color.Red);
-            //Core.GraphicsDevice.SetRenderTarget(SceneRenderTarget);
-            //Core.GraphicsDevice.Clear(Color.Black);
-
-
-            //    spriteBatch.Begin(SpriteSortMode.Immediate);
-            //    spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
-            //    spriteBatch.End();
-
-
-            //if (phDebug)
-            //{
-            //    Graphics.Instance.Batcher.Begin();
-            //    debugView.Render(Graphics.Instance.Batcher, Camera);
-            //    Graphics.Instance.Batcher.End();
-            //}
         }
 
         public MasterScene() : base()
         { }
+
+        public override void End()
+        {
+            base.End();
+
+            rh.Dispose();
+        }
     }
 }
