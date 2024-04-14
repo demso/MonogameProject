@@ -69,12 +69,14 @@ namespace Box2DLight
         internal RenderTarget2D renTar;
         private int[] data;
 
+        public bool Toggle = true;
+
         public RayHandler(World world) : this(world, null)
         {
             
         }
 
-        public RayHandler(World world, RayHandlerOptions options) : this(world, Core.GraphicsDevice.DisplayMode.Width / 8, Core.GraphicsDevice.DisplayMode.Height / 8, options)
+        public RayHandler(World world, RayHandlerOptions options) : this(world, Core.GraphicsDevice.DisplayMode.Width / 1, Core.GraphicsDevice.DisplayMode.Height / 1, options)
         {
             
         }
@@ -211,8 +213,9 @@ namespace Box2DLight
 
             Effect shader = customLightShader != null ? customLightShader : lightShader;
 
-            shader.CurrentTechnique.Passes[0].Apply();
+            
             shader.Parameters["WorldViewProjection"].SetValue(combined);
+            shader.CurrentTechnique.Passes[0].Apply();
 
             foreach (Light light in lightList)
             {

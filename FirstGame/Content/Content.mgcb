@@ -118,6 +118,12 @@
 /processorParam:DebugMode=Auto
 /build:ShadowEffect.fx
 
+#begin Texting.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Texting.fx
+
 #begin WithoutEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor

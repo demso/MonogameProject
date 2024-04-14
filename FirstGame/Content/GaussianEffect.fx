@@ -53,10 +53,77 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 	
     output.Position = input.Position;
     output.TexCoords0 = input.TexCoords - f;
+    if (output.TexCoords0[0] < 0)
+    {
+        output.TexCoords0[0] = 0;
+    }
+    if (output.TexCoords0[1] < 0)
+    {
+        output.TexCoords0[1] = 0;
+    }
+    if (output.TexCoords0[0] > 1)
+    {
+        output.TexCoords0[0] = 1;
+    }
+    if (output.TexCoords0[1] > 1)
+    {
+        output.TexCoords0[1] = 1;
+    }
+        
     output.TexCoords1 = input.TexCoords - c;
+    if (output.TexCoords1[0] < 0)
+    {
+        output.TexCoords1[0] = 0;
+    }
+    if (output.TexCoords1[1] < 0)
+    {
+        output.TexCoords1[1] = 0;
+    }
+    if (output.TexCoords1[0] > 1)
+    {
+        output.TexCoords1[0] = 1;
+    }
+    if (output.TexCoords1[1] > 1)
+    {
+        output.TexCoords1[1] = 1;
+    }
     output.TexCoords2 = input.TexCoords;
+    
     output.TexCoords3 = input.TexCoords + c;
+    if (output.TexCoords3[0] < 0)
+    {
+        output.TexCoords3[0] = 0;
+    }
+    if (output.TexCoords3[1] < 0)
+    {
+        output.TexCoords3[1] = 0;
+    }
+    if (output.TexCoords3[0] > 1)
+    {
+        output.TexCoords3[0] = 1;
+    }
+    if (output.TexCoords3[1] > 1)
+    {
+        output.TexCoords3[1] = 1;
+    }
+    
     output.TexCoords4 = input.TexCoords + f;
+    if (output.TexCoords4[0] < 0)
+    {
+        output.TexCoords4[0] = 0;
+    }
+    if (output.TexCoords4[1] < 0)
+    {
+        output.TexCoords4[1] = 0;
+    }
+    if (output.TexCoords4[0] > 1)
+    {
+        output.TexCoords4[0] = 1;
+    }
+    if (output.TexCoords4[1] > 1)
+    {
+        output.TexCoords4[1] = 1;
+    }
 
 	return output;
 }
@@ -64,26 +131,13 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 FragColor = {0, 0, 0, 1};
-    if (isDiffuse == true)
-    {
-        FragColor.rgb =
+    FragColor.rgb =
             far * tex2D(RenderTargetSampler, input.TexCoords0).rgb +
             close * tex2D(RenderTargetSampler, input.TexCoords1).rgb +
             center * tex2D(RenderTargetSampler, input.TexCoords2).rgb +
             close * tex2D(RenderTargetSampler, input.TexCoords3).rgb +
             far * tex2D(RenderTargetSampler, input.TexCoords4).rgb;
         return FragColor;
-    }
-    else
-    {
-        FragColor =
-            far * tex2D(RenderTargetSampler, input.TexCoords0) +
-            close * tex2D(RenderTargetSampler, input.TexCoords1) +
-            center * tex2D(RenderTargetSampler, input.TexCoords2) +
-            close * tex2D(RenderTargetSampler, input.TexCoords3) +
-            far * tex2D(RenderTargetSampler, input.TexCoords4);
-        return FragColor;
-    }
 }
 
 technique BasicColorDrawing

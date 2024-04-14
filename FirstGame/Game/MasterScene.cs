@@ -40,7 +40,9 @@ namespace FirstGame.Game
         private PointLight _light;
         internal RayHandler rh;
         static SpriteBatch spriteBatch;
-        public bool Toggle;
+        public static bool Toggle;
+        public static bool Toggle2;
+        private int blurrr = 3;
 
         public override void Initialize()
         {
@@ -75,6 +77,28 @@ namespace FirstGame.Game
                 .AddComponent(new PressKeyToPerformAction(Keys.N, e =>
                 {
                     Toggle = !Toggle;
+                    if (Input.IsKeyDown(Keys.LeftControl))
+                    {
+                        blurrr -= 1;
+                        
+                        rh.setBlurNum(blurrr);
+                        if (blurrr <= 0)
+                        {
+                            blurrr = 0;
+                            rh.setBlur(false);
+                        }
+                    }
+                    else
+                    {
+                        blurrr += 1;
+                        rh.setBlur(true);
+                        rh.setBlurNum(blurrr);
+                    }
+                }))
+                .AddComponent(new PressKeyToPerformAction(Keys.M, e =>
+                {
+                    Toggle2 = !Toggle2;
+                    rh.Toggle = !rh.Toggle;
                 }));
             playerEntity.InitBody();
 
@@ -93,8 +117,8 @@ namespace FirstGame.Game
             rh.setCombinedMatrix(Camera.ViewProjectionMatrix, 0, 0, Core.GraphicsDevice.DisplayMode.Width, Core.GraphicsDevice.DisplayMode.Height);
             RayHandler.useDiffuseLight(true);
             rh.setAmbientLight(0f, 0f, 0f, 1f);
-            rh.setBlur(false);
-            rh.setBlurNum(0);
+            rh.setBlur(true);
+            rh.setBlurNum(3);
 
             Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 1300, Color.White, 50, 0 , 0);
             light.SetSoft(true);
