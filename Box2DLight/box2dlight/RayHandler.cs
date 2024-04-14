@@ -74,7 +74,7 @@ namespace Box2DLight
             
         }
 
-        public RayHandler(World world, RayHandlerOptions options) : this(world, Core.GraphicsDevice.DisplayMode.Width / 4, Core.GraphicsDevice.DisplayMode.Height / 4, options)
+        public RayHandler(World world, RayHandlerOptions options) : this(world, Core.GraphicsDevice.DisplayMode.Width / 8, Core.GraphicsDevice.DisplayMode.Height / 8, options)
         {
             
         }
@@ -204,6 +204,7 @@ namespace Box2DLight
                 
                 Core.GraphicsDevice.SetRenderTarget(lightMap.frameBuffer);
                 Core.GraphicsDevice.Clear(Color.Transparent);
+                //Core.GraphicsDevice.Viewport = new Viewport(0, 0, lightMap.frameBuffer.Width, lightMap.frameBuffer.Height);
             }
 
             simpleBlendFunc.Apply();

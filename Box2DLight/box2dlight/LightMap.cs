@@ -45,7 +45,7 @@ namespace Box2DLight
             this.fboHeight = fboHeight;
             
             frameBuffer = new RenderTarget2D(Core.GraphicsDevice, fboWidth, fboHeight,
-                false, SurfaceFormat.ColorSRgb, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+                false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
             pingPongBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.ColorSRgb, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
 
             spriteBatch = new SpriteBatch(Core.GraphicsDevice);
@@ -66,26 +66,48 @@ namespace Box2DLight
             {
                 if (RayHandler.isDiffuse)
                 {
+                    //Core.GraphicsDevice.BlendState = BlendState.Opaque;
+                    //Core.GraphicsDevice.Clear(Color.Transparent);
+
+                    //graphicsDevice.SetVertexBuffer(lightMapMesh);
+                    //graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
+
+                    Core.GraphicsDevice.SetRenderTarget(null);
+                    Core.GraphicsDevice.Clear(Color.Transparent);
+
+                    spriteBatch.Begin(blendState: BlendState.Opaque);
+                    spriteBatch.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
+                    spriteBatch.End();
+
+                    //Graphics.Instance.Batcher.Begin(BlendState.Opaque);
+                    //Graphics.Instance.Batcher.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
+                    //Graphics.Instance.Batcher.End();
+
+                    Rectangle rec = graphicsDevice.Viewport.Bounds.Clone();
+
                     shader = diffuseShader;
                     shader.CurrentTechnique.Passes[0].Apply();
                     blFn = rayHandler.diffuseBlendFunc;
                     shader.Parameters["Ambient"].SetValue(c.ToVector4());
                     shader.Parameters["RenderTargetTexture"].SetValue(frameBuffer);
 
-                    Core.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-
+                    blFn.Apply();
                     graphicsDevice.SetVertexBuffer(lightMapMesh);
                     graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
 
-                    Core.GraphicsDevice.SetRenderTarget(null);
+                    //Graphics.Instance.Batcher.Begin(blFn.Get());
+                    //Graphics.Instance.Batcher.Draw(frameBuffer, rec, Color.White);
+                    //Graphics.Instance.Batcher.End();
 
-                    spriteBatch.Begin();
-                    spriteBatch.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    spriteBatch.End();
+                    //spriteBatch.Begin(blendState: BlendState.Opaque);
+                    //spriteBatch.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
+                    //spriteBatch.End();
 
-                    spriteBatch.Begin(blendState: blFn.Get());
-                    spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    spriteBatch.End();
+                    //Rectangle rec = graphicsDevice.Viewport.Bounds.Clone();
+
+                    //spriteBatch.Begin(blendState: blFn.Get());
+                    //spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
+                    //spriteBatch.End();
                 }
                 else
                 {
@@ -133,7 +155,7 @@ namespace Box2DLight
                 {
                     blurShader.CurrentTechnique.Passes[0].Apply();
                     blurShader.Parameters["dir"].SetValue(new Vector2(1f, 0f));
-                    blurShader.Parameters["RenderTargetTexture"].SetValue(pingPongBuffer);
+                    blurShader.Parameters["RenderTargetTexture"].SetValue(frameBuffer);
                     blurShader.Parameters["FBO_W"].SetValue(frameBuffer.Width);
                     blurShader.Parameters["FBO_H"].SetValue(frameBuffer.Height);
                     blurShader.Parameters["isDiffuse"].SetValue(RayHandler.isDiffuse);
