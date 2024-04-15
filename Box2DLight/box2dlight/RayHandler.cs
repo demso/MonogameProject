@@ -76,7 +76,7 @@ namespace Box2DLight
             
         }
 
-        public RayHandler(World world, RayHandlerOptions options) : this(world, Core.GraphicsDevice.DisplayMode.Width / 1, Core.GraphicsDevice.DisplayMode.Height / 1, options)
+        public RayHandler(World world, RayHandlerOptions options) : this(world, Core.GraphicsDevice.DisplayMode.Width / 4, Core.GraphicsDevice.DisplayMode.Height / 4, options)
         {
             
         }
