@@ -21,28 +21,6 @@ sampler2D RenderTargetSampler = sampler_state
     Texture = <RenderTargetTexture>;
 };
 
-//struct VertexShaderInput
-//{
-//    float4 Position : POSITION0;
-//    float2 TexCoords : TEXCOORD0;
-//};
-
-//struct VertexShaderOutput
-//{
-//    float4 Position : POSITION0;
-//    float2 TexCoords : TEXCOORD0;
-//};
-
-//VertexShaderOutput MainVS(in VertexShaderInput input)
-//{
-//    VertexShaderOutput output = (VertexShaderOutput) 0;
-	
-//    output.Position = input.Position;
-//    output.TexCoords = input.TexCoords;
-
-//    return output;
-//}
-
 float4 MainPS(float2 TexCoords : TEXCOORD0) : COLOR
 {
     float4 FragColor = { 0, 0, 1, 1 };
@@ -53,7 +31,7 @@ float4 MainPS(float2 TexCoords : TEXCOORD0) : COLOR
             0.3162162162f * tex2D(RenderTargetSampler, TexCoords + _sampleOffsets[1]).rgb +
             0.2270270270f * tex2D(RenderTargetSampler, TexCoords + _sampleOffsets[2]).rgb +
             0.3162162162f * tex2D(RenderTargetSampler, TexCoords + _sampleOffsets[3]).rgb +
-            0.0702702703f * tex2D(RenderTargetSampler, TexCoords + _sampleOffsets[4]).rgb;
+            0.0702702703f * tex2D(RenderTargetSampler, TexCoords + _sampleOffsets[4]).rgb;  
     }
     else
     {
