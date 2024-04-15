@@ -513,8 +513,9 @@ namespace Nez.Farseer
 					float radius = circle.Radius;
 					Vector2 axis = MathUtils.Mul(xf.Q, new Vector2(1.0f, 0.0f));
 
-					DrawSolidCircle(center, radius, axis, color);
-				}
+					DrawCircle(center, radius, color);
+					DrawSegment(center, center + axis * radius, color);
+					}
 					break;
 
 				case ShapeType.Polygon:
@@ -531,7 +532,7 @@ namespace Nez.Farseer
 						_tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
 					}
 
-					DrawSolidPolygon(_tempVertices, vertexCount, color);
+					DrawPolygon(_tempVertices, vertexCount, color);
 				}
 					break;
 

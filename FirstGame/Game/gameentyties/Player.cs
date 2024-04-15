@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FirstGame.Game.components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -38,23 +39,31 @@ public class Player : GameEntity
     internal void InitBody()
     {
         Body = new FSRigidBody();
-        FSCollisionCircle fixture = new FSCollisionCircle(5);
-        fixture.SetCollidesWith(Category.All);
-        fixture.SetCollisionCategories(Category.Cat1);
-        fixture.SetRestitution(0);
-        fixture.SetFriction(0.5f);
-        fixture.SetDensity(1);
+        FSCollisionCircle fixture = (FSCollisionCircle) new FSCollisionCircle(5)
+            .SetCollidesWith(Category.All)
+            .SetCollisionCategories(Category.Cat1)
+            .SetRestitution(0)
+            .SetFriction(0.5f)
+            .SetDensity(1);
+
+        FSCollisionCircle filterFixture = (FSCollisionCircle)new FSCollisionCircle(15)
+            .SetCollidesWith(Category.All)
+            .SetCollisionCategories(Category.Cat1)
+            .SetRestitution(0)
+            .SetFriction(0f)
+            .SetDensity(1)
+            .SetIsSensor(true);
+
         Body.SetBodyType(BodyType.Dynamic);
         Body.SetFixedRotation(true);
         Body.SetMass(60f);
         Body.SetLinearDamping(12f);
         AddComponent(Body);
 
-        
-
         Body.Body.UserData = this;
 
         AddComponent(fixture);
+        AddComponent(filterFixture);
 
         Transform.SetScale(scale);
         Transform.SetPosition(350, 350);
@@ -65,7 +74,23 @@ public class Player : GameEntity
         base.Kill();
         Helper.Log("Player {Name} killed");
     }
-    
+
+    public override bool OnBeginContact(Fixture thisFixture, Fixture otherFixture, Contact contact)
+    {
+        
+        return base.OnBeginContact(thisFixture, otherFixture, contact);
+    }
+
+    //public bool onColl(Fixture A, Fixture B, Contact contact)
+    //{
+    //    return true;
+    //}
+
+    public override void OnEndContact(Fixture thisFixture, Fixture otherFixture, Contact contact)
+    {
+        base.OnEndContact(thisFixture, otherFixture, contact);
+    }
+
     public void Revive(){
         Hp = MaxHp;
         IsAlive = true;

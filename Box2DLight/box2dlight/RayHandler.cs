@@ -167,7 +167,6 @@ namespace Box2DLight
             simpleBlendFunc.Apply();
 
             Effect shader = customLightShader != null ? customLightShader : lightShader;
-
             
             shader.Parameters["WorldViewProjection"].SetValue(combined);
             shader.CurrentTechnique.Passes[0].Apply();

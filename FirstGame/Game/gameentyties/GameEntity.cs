@@ -1,12 +1,14 @@
 ﻿using System;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FirstGame.Game.entyties;
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Farseer;
 
 namespace FirstGame.Game;
 
-public class GameEntity : Entity
+public class GameEntity : Entity, BodyData
 {
     public enum Friendliness {
         Neutral,
@@ -68,9 +70,24 @@ public class GameEntity : Entity
     //     Body.GetTransform(out trf);
     //     Body.SetTransform(pos, trf.Q.GetAngle());
     // }
-    public virtual string GetName() {
-        return EntityFriendliness + " Entity";
+    public virtual object GetData()
+    {
+        return this;
     }
+
+    public virtual string GetName() {
+        return EntityKind + " Entity";
+    }
+
+    public virtual bool OnBeginContact(Fixture thisFixture, Fixture otherFixture, Contact contact)
+    {
+        return true;
+    }
+
+    public virtual void OnEndContact(Fixture thisFixture, Fixture otherFixture, Contact contact)
+    {
+    }
+
     public virtual void Kill(){
         IsAlive = false;
     }

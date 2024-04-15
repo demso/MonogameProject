@@ -6,6 +6,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FirstGame.Game.components;
+using FirstGame.Game.entyties;
 using FirstGame.Game.tiled;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -61,7 +62,18 @@ namespace FirstGame.Game
             world = GetOrCreateSceneComponent<FSWorld>();
             world.TimeStep = 1 / 144f;
             world.World.Gravity = Vector2.Zero;
+            world.World.ContactManager.OnBeginContact = contact =>
+            {
+                return 
+                    ((BodyData)contact.FixtureA.Body.UserData).OnBeginContact(contact.FixtureA, contact.FixtureB, contact) ||
+                    ((BodyData)contact.FixtureB.Body.UserData).OnBeginContact(contact.FixtureB, contact.FixtureA, contact);
+            };
 
+            world.World.ContactManager.OnEndContact = contact =>
+            {
+                ((BodyData)contact.FixtureA.Body.UserData).OnEndContact(contact.FixtureA, contact.FixtureB, contact);
+                ((BodyData)contact.FixtureB.Body.UserData).OnEndContact(contact.FixtureB, contact.FixtureA, contact);
+            };
 
             rh = new RayHandler(world.World);
             AddRenderer(new LightRenderer(rh));

@@ -53,6 +53,8 @@ namespace FirstGame.Game
 
             if (msc.phDebug)
             {
+                //msc.debugView.RemoveFlags(FSDebugView.DebugViewFlags.Shape);
+                //msc.debugView.AppendFlags(FSDebugView.DebugViewFlags.PolygonPoints);
                 msc.debugView.Render(Graphics.Instance.Batcher, msc.Camera);
             }
         }
