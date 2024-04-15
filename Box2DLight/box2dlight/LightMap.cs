@@ -37,13 +37,8 @@ namespace Box2DLight
 
         private int fboWidth, fboHeight;
 
-        private const int BLUR_RADIUS = 7;
-        private const float BLUR_AMOUNT = 2.0f;
-
-        private RenderTarget2D _renderTarget1;
-        private RenderTarget2D _renderTarget2;
-
-        GaussianBlur _gaussianBlur;
+        private Vector2[] _sampleHorOffsets;
+        private Vector2[] _sampleVertOffsets;
 
         public LightMap(RayHandler rayHandler, int fboWidth, int fboHeight)
         {
@@ -65,108 +60,60 @@ namespace Box2DLight
             spriteBatch = new SpriteBatch(Core.GraphicsDevice);
 
             lightMapMesh = CreateLightMapMesh();
-            lightMapMesh2 = CreateLightMapMesh2();
+
             CreateShaders();
 
-            _gaussianBlur = new GaussianBlur(Core.Instance);
-            _gaussianBlur.ComputeKernel(BLUR_RADIUS, BLUR_AMOUNT);
-
-            _renderTarget1 = new RenderTarget2D(Core.GraphicsDevice, fboWidth, fboHeight,
-                false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
-            _renderTarget2 = new RenderTarget2D(Core.GraphicsDevice, fboWidth, fboHeight,
-                false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
-
-            _gaussianBlur.ComputeOffsets(fboWidth, fboHeight);
+            Vector2 futher = new Vector2(3.2307692308f / fboWidth, 3.2307692308f / fboHeight);
+            Vector2 closer = new Vector2(1.3846153846f / fboWidth, 1.3846153846f / fboHeight);
+            Vector2 f = futher * Vector2.UnitX;
+            Vector2 c = closer * Vector2.UnitX;
+            _sampleHorOffsets = new Vector2[5] { -f, -c, Vector2.Zero, c, f };
+            f = futher * Vector2.UnitY;
+            c = closer * Vector2.UnitY;
+            _sampleVertOffsets = new Vector2[5] { -f, -c, Vector2.Zero, c, f };
         }
 
         public void Render()
         {
-
-            //Core.GraphicsDevice.SetRenderTarget(null);
-            //Core.GraphicsDevice.Clear(Color.Transparent);
-
-            //spriteBatch.Begin(blendState: BlendState.Opaque);
-            //spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-            //spriteBatch.End();
-
             bool needed = rayHandler.lightRenderedLastFrame > 0;
 
             Color c = rayHandler.ambientLight;
             Effect shader = shadowShader;
             BlendFunc blFn = rayHandler.shadowBlendFunc;
+
+            Core.GraphicsDevice.SetRenderTarget(rayHandler.RenderHere);
+
             if (rayHandler.shadows)
             {
                 if (RayHandler.isDiffuse)
                 {
-                    //Core.GraphicsDevice.BlendState = BlendState.Opaque;
-                    //Core.GraphicsDevice.Clear(Color.Transparent);
+                    diffuseShader.Parameters["Ambient"].SetValue(c.ToVector4());
+                    diffuseShader.Parameters["RenderTargetTexture"].SetValue(frameBuffer);
+                    diffuseShader.CurrentTechnique.Passes[0].Apply();
 
-                    //graphicsDevice.SetVertexBuffer(lightMapMesh);
-                    //graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
-
-                    Core.GraphicsDevice.SetRenderTarget(null);
-                    Core.GraphicsDevice.Clear(Color.Transparent);
-
-                    spriteBatch.Begin(blendState: BlendState.Opaque);
-                    spriteBatch.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    spriteBatch.End();
-
-
-                    shader = diffuseShader;
-
-                    blFn = rayHandler.diffuseBlendFunc;
-                    shader.Parameters["Ambient"].SetValue(c.ToVector4());
-                    shader.Parameters["RenderTargetTexture"].SetValue(frameBuffer);
-                    shader.CurrentTechnique.Passes[0].Apply();
-
-                    blFn.Apply();
+                    rayHandler.diffuseBlendFunc.Apply();
 
                     graphicsDevice.SetVertexBuffer(lightMapMesh);
                     graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
-
-
-
-
-                    //Graphics.Instance.Batcher.Begin(blFn.Get());
-                    //Graphics.Instance.Batcher.Draw(frameBuffer, rec, Color.White);
-                    //Graphics.Instance.Batcher.End();
-
-                    //spriteBatch.Begin(blendState: BlendState.Opaque);
-                    //spriteBatch.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    //spriteBatch.End();
-
-                    //Rectangle rec = graphicsDevice.Viewport.Bounds.Clone();
-
-                    //spriteBatch.Begin();
-                    //spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    //spriteBatch.End();
                 }
                 else
                 {
-
-                    blFn = rayHandler.shadowBlendFunc;
-                    shader.Parameters["Ambient"].SetValue(new Vector4((float)c.R * (float)c.A / 255f,
+                    shadowShader.Parameters["Ambient"].SetValue(new Vector4((float)c.R * (float)c.A / 255f,
                         (float)c.G * (float)c.A / 255f, (float)c.B * (float)c.A / 255f, 1f - (float)c.A / 255f));
-                    shader.Parameters["RenderTargetTexture"].SetValue(frameBuffer);
-                    shader.CurrentTechnique.Passes[0].Apply();
-                    blFn.Apply();
+                    shadowShader.Parameters["RenderTargetTexture"].SetValue(frameBuffer);
+                    shadowShader.CurrentTechnique.Passes[0].Apply();
+
+                    rayHandler.shadowBlendFunc.Apply();
 
                     graphicsDevice.SetVertexBuffer(lightMapMesh);
                     graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
-
-                    Core.GraphicsDevice.SetRenderTarget(null);
-
-                    spriteBatch.Begin(samplerState: SamplerState.AnisotropicClamp);
-                    spriteBatch.Draw(rayHandler.renTar, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    spriteBatch.End();
-
-                    spriteBatch.Begin(blendState: blFn.Get(), samplerState: SamplerState.AnisotropicClamp);
-                    spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                    spriteBatch.End();
                 }
             }
             else if (needed)
             {
+                withoutShadowShader.CurrentTechnique.Passes[0].Apply();
+                withoutShadowShader.Parameters["RenderTargetTexture"].SetValue(frameBuffer);
+
                 graphicsDevice.SetVertexBuffer(lightMapMesh);
                 graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
             }
@@ -174,118 +121,36 @@ namespace Box2DLight
             graphicsDevice.BlendState = (BlendState.Opaque);
         }
 
-        private Texture2D result;
-
-        GaussianBlurEffect blurEffect;
-
         public void GaussianBlur()
         {
             Core.GraphicsDevice.SetRenderTarget(pingPongBuffer);
-            Core.GraphicsDevice.Clear(Color.Transparent);;
+            Core.GraphicsDevice.Clear(Color.Transparent);
             
-            float FBO_W = fboWidth;
-            float FBO_H = fboHeight;
-            Vector2 futher = new Vector2(3.2307692308f / FBO_W, 3.2307692308f / FBO_H);
-            Vector2 closer = new Vector2(1.3846153846f / FBO_W, 1.3846153846f / FBO_H);
-            Vector2 f = futher * Vector2.UnitX;
-            Vector2 c = closer * Vector2.UnitX;
-            Vector2[] _sampleHorOffsets = new Vector2[5]{-f, -c, Vector2.Zero, c, f};
-            f = futher * Vector2.UnitY;
-            c = closer * Vector2.UnitY;
-            Vector2[] _sampleVertOffsets = new Vector2[5]{-f, -c, Vector2.Zero, c, f};
-
+            blurShader.Parameters["isDiffuse"].SetValue(RayHandler.isDiffuse);
 
             for (int i = 0; i < rayHandler.blurNum; i++)
             {
                 Core.GraphicsDevice.SetRenderTarget(pingPongBuffer);
-                //Core.GraphicsDevice.Clear(Color.Red);
-                graphicsDevice.BlendState = (BlendState.AlphaBlend);
 
-                //horizontal
+                //vertical
                 {
                     blurShader.Parameters["_sampleOffsets"].SetValue(_sampleVertOffsets);
-                    blurShader.Parameters["RenderTargetTexture"].SetValue(frameBuffer);
-                    //blurShader.Parameters["FBO_W"].SetValue(frameBuffer.Width);
-                    //blurShader.Parameters["FBO_H"].SetValue(frameBuffer.Height);
-                    //blurShader.Parameters["isDiffuse"].SetValue(RayHandler.isDiffuse);
-                    //blurShader.CurrentTechnique.Passes[0].Apply();
-
-                    //graphicsDevice.Textures[0] = frameBuffer;
-
-                    //graphicsDevice.SetVertexBuffer(lightMapMesh);
-                    //graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
 
                     spriteBatch.Begin(effect: blurShader);
                     spriteBatch.Draw(frameBuffer, graphicsDevice.Viewport.Bounds, Color.White);
                     spriteBatch.End();
                 }
 
-                blurShader.Parameters["_sampleOffsets"].SetValue(_sampleHorOffsets);
-               // blurShader.Parameters["RenderTargetTexture"].SetValue();
-
                 Core.GraphicsDevice.SetRenderTarget(frameBuffer);
 
-                spriteBatch.Begin(effect: blurShader, blendState: BlendState.Opaque);
-                spriteBatch.Draw(pingPongBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-                spriteBatch.End();
+                //horizontal
+                {
+                    blurShader.Parameters["_sampleOffsets"].SetValue(_sampleHorOffsets);
 
-                //Core.GraphicsDevice.SetRenderTarget(null);
-                //Core.GraphicsDevice.Clear(Color.Transparent);
-
-                //spriteBatch.Begin();
-                //spriteBatch.Draw(pingPongBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-                //spriteBatch.End();
-
-
-                //Core.GraphicsDevice.SetRenderTarget(null);
-                //Core.GraphicsDevice.Clear(Color.Transparent);
-
-                //spriteBatch.Begin(blendState: BlendState.AlphaBlend);
-                //spriteBatch.Draw(pingPongBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-                //spriteBatch.End();
-
-                //Core.GraphicsDevice.SetRenderTarget(null);
-                //Core.GraphicsDevice.Clear(Color.Transparent);
-
-                //spriteBatch.Begin();
-                //spriteBatch.Draw(frameBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-                //spriteBatch.End();
-
-                //Core.GraphicsDevice.SetRenderTarget(frameBuffer);
-                //Core.GraphicsDevice.Clear(Color.Transparent);
-
-                ////BasicEffect be = new BasicEffect(graphicsDevice);
-                ////be.TextureEnabled = true;
-                ////be.Texture = pingPongBuffer;
-                ////be.CurrentTechnique.Passes[0].Apply();
-
-
-                //graphicsDevice.Textures[0] = pingPongBuffer;
-
-                //graphicsDevice.SetVertexBuffer(lightMapMesh);
-                //graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
-
-                //spriteBatch.Begin(blendState: BlendState.Opaque, samplerState: new SamplerState() { Filter = TextureFilter.Point });
-                //spriteBatch.Draw(pingPongBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-                //spriteBatch.End();
-                //Graphics.Instance.Batcher.Begin(BlendState.Opaque);
-                //Graphics.Instance.Batcher.Draw(pingPongBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-                //Graphics.Instance.Batcher.End();
-
-                //Core.GraphicsDevice.SetRenderTarget(frameBuffer);
-                //Core.GraphicsDevice.Clear(Color.Transparent);
-                //graphicsDevice.BlendState = (BlendState.Opaque);
-                //// vertical
-                //{
-                //    blurShader.Parameters["dir"].SetValue(new Vector2(0f, 1f));
-                //    blurShader.Parameters["RenderTargetTexture"].SetValue(pingPongBuffer);
-                //    blurShader.Parameters["FBO_W"].SetValue(pingPongBuffer.Width);
-                //    blurShader.Parameters["FBO_H"].SetValue(pingPongBuffer.Height);
-                //    blurShader.Parameters["isDiffuse"].SetValue(RayHandler.isDiffuse);
-                //    blurShader.CurrentTechnique.Passes[0].Apply();
-                //    graphicsDevice.SetVertexBuffer(lightMapMesh);
-                //    graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, lightMapMesh.VertexCount);
-                //}
+                    spriteBatch.Begin(effect: blurShader, blendState: BlendState.Opaque);
+                    spriteBatch.Draw(pingPongBuffer, graphicsDevice.Viewport.Bounds, Color.White);
+                    spriteBatch.End();
+                }
             }
         }
 
@@ -303,7 +168,6 @@ namespace Box2DLight
         {
             DisposeShaders();
 
-            //shadowShader = rayHandler.pseudo3d ? DynamicShadowShader.CreateShadowShader() : ShadowShader.CreateShadowShader();
             shadowShader = ShadowShader.CreateShadowShader();
 
             diffuseShader = DiffuseShader.CreateShadowShader();
@@ -311,9 +175,6 @@ namespace Box2DLight
             withoutShadowShader = WithoutShadowShader.CreateShadowShader();
 
             blurShader = Gaussian.CreateBlurShader();
-            testEf = Core.Content.Load<Effect>(@"Texting");
-
-            blurEffect = Core.Content.LoadNezEffect<GaussianBlurEffect>();
         }
 
         private void DisposeShaders()

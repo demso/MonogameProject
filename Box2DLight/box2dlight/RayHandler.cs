@@ -58,6 +58,8 @@ namespace Box2DLight
         int viewportWidth = GraphicsDeviceManager.DefaultBackBufferWidth;
         int viewportHeight = GraphicsDeviceManager.DefaultBackBufferHeight;
 
+        public RenderTarget2D RenderHere = null;
+
         internal int lightRenderedLastFrame = 0;
 
         float x1, x2, y1, y2;
@@ -102,7 +104,11 @@ namespace Box2DLight
             data = new int[w * h];
             resizeFBO(fboWidth, fboHeight);
             lightShader = LightShader.createLightShader();
-            
+        }
+
+        ~RayHandler()
+        {
+            Dispose();
         }
 
         public void resizeFBO(int fboWidth, int fboHeight)
@@ -110,36 +116,6 @@ namespace Box2DLight
             lightMap = new LightMap(this, fboWidth, fboHeight);
         }
 
-        //public void setCombinedMatrix(OrthographicCamera camera)
-        //{
-        //    this.setCombinedMatrix(
-        //            camera.combined,
-        //            camera.position.x,
-        //            camera.position.y,
-        //            camera.viewportWidth * camera.zoom,
-        //            camera.viewportHeight * camera.zoom);
-        //}
-
-        public void setCombinedMatrix(Matrix combined)
-        {
-            this.combined = combined;
-
-            float invWidth = combined.M11;
-            //возможно неправильно выбраны переменные матрицы
-            float halfViewPortWidth = 1f / invWidth;
-            float x = -halfViewPortWidth * combined.M14;
-            x1 = x - halfViewPortWidth;
-            x2 = x + halfViewPortWidth;
-
-            float invHeight = combined.M22;
-
-            float halfViewPortHeight = 1f / invHeight;
-            float y = -halfViewPortHeight * combined.M24;
-            y1 = y - halfViewPortHeight;
-            y2 = y + halfViewPortHeight;
-        }
-
-        //вызывать постоянно
         public void setCombinedMatrix(Matrix combined, float x, float y, float viewPortWidth, float viewPortHeight)
         {
             this.combined = combined;
@@ -153,24 +129,15 @@ namespace Box2DLight
             y2 = y + halfViewPortHeight;
         }
 
-        //public void setCombinedMatrix(Camera camera)
-        //{
-        //    this.setCombinedMatrix(
-        //        camera.ViewProjectionMatrix,
-        //        camera.Transform.Position.X,
-        //        camera.Transform.Position.Y,
-        //        camera.viewportWidth * camera.zoom,
-        //        camera.viewportHeight * camera.zoom);
-        //}
-
         public bool intersect(float x, float y, float radius)
         {
             return x1 < x + radius && x2 > x - radius &&
                     y1 < y + radius && y2 > y - radius;
         }
 
-        public void updateAndRender()
+        public void updateAndRender(RenderTarget2D ren)
         {
+            RenderHere = ren;
             update();
             render();
         }
@@ -193,20 +160,8 @@ namespace Box2DLight
             bool useLightMap = shadows || blur;
             if (useLightMap)
             {
-                int w = Core.GraphicsDevice.PresentationParameters.BackBufferWidth;
-                int h = Core.GraphicsDevice.PresentationParameters.BackBufferHeight;
-                if (w != renTar.Width || h != renTar.Height)
-                {
-                    renTar = new RenderTarget2D(Core.GraphicsDevice, w, h);
-                    data = new int[w * h];
-                }
-
-                Core.GraphicsDevice.GetBackBufferData(data);
-                renTar.SetData(data);
-                
                 Core.GraphicsDevice.SetRenderTarget(lightMap.frameBuffer);
                 Core.GraphicsDevice.Clear(Color.Transparent);
-                //Core.GraphicsDevice.Viewport = new Viewport(0, 0, lightMap.frameBuffer.Width, lightMap.frameBuffer.Height);
             }
 
             simpleBlendFunc.Apply();
@@ -379,10 +334,10 @@ namespace Box2DLight
             lightMap.lightMapDrawingDisabled = !isAutomatic;
         }
 
-        //public Texture2D getLightMapTexture()
-        //{
-        //    return lightMap.frameBuffer;
-        //}
+        public Texture2D getLightMapTexture()
+        {
+            return lightMap.frameBuffer;
+        }
 
         public RenderTarget2D getLightMapBuffer()
         {

@@ -11,13 +11,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Nez;
+using Nez.Console;
 using Nez.Farseer;
 using Nez.Sprites;
 using Nez.Textures;
 using Nez.Tiled;
-using NVorbis.Ogg;
 using Penumbra;
-using static Nez.Farseer.FSDebugView;
+using Light = Box2DLight.Light;
 
 namespace FirstGame.Game
 {
@@ -38,7 +38,7 @@ namespace FirstGame.Game
         internal PenumbraComponent penumbra;
         internal GameTime gameTime;
         private PointLight _light;
-        internal RayHandler rh;
+        internal static RayHandler rh;
         static SpriteBatch spriteBatch;
         public static bool Toggle;
         public static bool Toggle2;
@@ -62,8 +62,9 @@ namespace FirstGame.Game
             world.TimeStep = 1 / 144f;
             world.World.Gravity = Vector2.Zero;
 
+
             rh = new RayHandler(world.World);
-            //AddRenderer(new LightRenderer(rh));
+            AddRenderer(new LightRenderer(rh));
 
             tiledMap = Content.LoadTiledMap("Content/assets/tiledmap/newmap.tmx");
 
@@ -113,14 +114,16 @@ namespace FirstGame.Game
             Camera.ZoomIn(zoomStep * 4);
             new TiledBodiesLoader(this).LoadBodies(tiledMap);
 
-            
             rh.setCombinedMatrix(Camera.ViewProjectionMatrix, 0, 0, Core.GraphicsDevice.DisplayMode.Width, Core.GraphicsDevice.DisplayMode.Height);
             RayHandler.useDiffuseLight(true);
+            rh.setShadows(true);
             rh.setAmbientLight(0f, 0f, 0f, 1f);
             rh.setBlur(true);
             rh.setBlurNum(3);
 
             Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 1300, Color.White, 50, 0 , 0);
+            Light.GlobalCollisionCategories = Category.None;
+            Light.GlobalCollisionGroup = Globals.LightCG;
             light.SetSoft(true);
             light.SetSoftnessLength(1.5f);
             light.AttachToBody(playerEntity.Body.Body);
@@ -156,5 +159,21 @@ namespace FirstGame.Game
 
             rh.Dispose();
         }
+
+        [Command("set-blur", "World's a little blurry.")]
+        static void BlurNum(string options = "3")
+        {
+            if (Int32.TryParse(options, out int value))
+                rh.setBlurNum(value);
+        }
+
+        [Command("diffuse-light", "World's a little blurry.")]
+        static void DiffuseLight(string options = "1")
+        {
+            if (Boolean.TryParse(options, out bool value))
+                rh.setDiffuseLight(value);
+        }
     }
+
+
 }

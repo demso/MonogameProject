@@ -41,7 +41,6 @@ namespace Box2DLight
         protected VertexBuffer lightMesh;
         protected VertexBuffer softShadowMesh;
 
-        //protected float[] segments;
         protected float[] mx;
         protected float[] my;
         protected float[] f;
@@ -154,12 +153,12 @@ namespace Box2DLight
         public void Dispose()
         {
             affectedFixtures.Clear();
-            //lightMesh.Dispose();
-            //softShadowMesh.Dispose();
-            //foreach (Mesh mesh in dynamicShadowMeshes)
-            //{
-            //    mesh.Dispose();
-            //}
+            lightMesh.Dispose();
+            softShadowMesh.Dispose();
+            foreach (VertexBuffer mesh in dynamicShadowMeshes)
+            {
+                mesh.Dispose();
+            }
             dynamicShadowMeshes.Clear();
         }
 
@@ -326,10 +325,10 @@ namespace Box2DLight
 
         internal float ray(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
         {
-            if ((GlobalCollidesWith != null || GlobalCollisionGroup != 0) && !GlobalContactFilter(fixture))
+            if ((GlobalCollidesWith != null || GlobalCollisionGroup != 0) && GlobalContactFilter(fixture))
                 return -1;
 
-            if ((CollidesWith != null || CollisionGroup != 0) && !ContactFilter(fixture))
+            if ((CollidesWith != null || CollisionGroup != 0) && ContactFilter(fixture))
                 return -1;
 
             if (ignoreBody && fixture.Body == GetBody())
@@ -364,7 +363,7 @@ namespace Box2DLight
                 return GlobalCollisionGroup > 0;
 
             return ((GlobalCollidesWith & fixtureB.CollisionCategories) == Category.None) &
-                   ((CollisionCategories & fixtureB.CollidesWith) == Category.None);
+                   ((GlobalCollisionCategories & fixtureB.CollidesWith) == Category.None);
         }
 
         public static void SetGlobalContactFilter(Category collisionCategories, Category collidesWith, short collideGroup)
