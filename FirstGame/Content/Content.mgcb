@@ -112,11 +112,24 @@
 /processorParam:DebugMode=Auto
 /build:LightEffect.fx
 
+#begin NewGaussianEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Debug
+/processorParam:Defines=
+/build:NewGaussianEffect.fx
+
 #begin ShadowEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:ShadowEffect.fx
+
+#begin Texting.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Texting.fx
 
 #begin WithoutEffect.fx
 /importer:EffectImporter

@@ -92,7 +92,7 @@ public class BodyTileResolver
             (Direction.West) => FixtureFactory.AttachRectangle(0.1f, 1f, 1, new Vector2(-0.4f, 0), body)
         };
 
-        fixture.CollisionGroup = -Globals.LightCG;
+        fixture.CollisionGroup = Globals.LightCG;
 
         return body;
     }
@@ -143,10 +143,10 @@ public Body fullBody(float x, float y, Object userData)
         //boolean eastWard = cell.getRotation() == TiledMapTileLayer.Cell.ROTATE_270 && !cell.getFlipVertically() && !cell.getFlipVertically();
         //boolean westWard = cell.getRotation() == TiledMapTileLayer.Cell.ROTATE_90 && !cell.getFlipVertically() && !cell.getFlipVertically();
 
-        bool southWard = !layerTile.DiagonalFlip && !layerTile.HorizontalFlip && layerTile.VerticalFlip,
-             northWard = !layerTile.DiagonalFlip && !layerTile.HorizontalFlip && !layerTile.VerticalFlip,
-             eastWard = layerTile.DiagonalFlip && layerTile.HorizontalFlip && !layerTile.VerticalFlip,
-             westWard = layerTile.DiagonalFlip && !layerTile.HorizontalFlip && layerTile.VerticalFlip;
+        bool southWard = !layerTile.DiagonalFlip &&  layerTile.VerticalFlip,
+             northWard = !layerTile.DiagonalFlip &&  !layerTile.VerticalFlip,
+             eastWard = layerTile.DiagonalFlip && layerTile.HorizontalFlip,
+             westWard = layerTile.DiagonalFlip && !layerTile.HorizontalFlip;
 
         if (northWard)
             return Direction.North;

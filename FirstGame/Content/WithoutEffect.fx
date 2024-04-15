@@ -7,7 +7,6 @@
 #define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-//matrix WorldViewProjection;
 Texture2D RenderTargetTexture;
 sampler2D RenderTargetSampler = sampler_state
 {
@@ -30,8 +29,8 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     VertexShaderOutput output = (VertexShaderOutput) 0;
 
-    output.Position = input.APosition; //mul(input.APosition, WorldViewProjection);
-    output.TexCoords = input.APosition;
+    output.Position = input.APosition;
+    output.TexCoords = input.ATexCoords;
 
     return output;
 }

@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirstGame", "FirstGame\Firs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Box2DLight", "Box2DLight\Box2DLight.csproj", "{A4B9F9F5-F78B-443A-AA44-CA2C293C2A9D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez.MG38", "Nez-master\Nez.Portable\Nez.MG38.csproj", "{B27987E7-E16B-4CD5-B3F6-0DB25CDF5C08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez.MG38.FarseerPhysics", "Nez-master\Nez.FarseerPhysics\Nez.MG38.FarseerPhysics.csproj", "{0E4D2999-3F41-4682-9DA6-14CA7C40526F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{A4B9F9F5-F78B-443A-AA44-CA2C293C2A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4B9F9F5-F78B-443A-AA44-CA2C293C2A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4B9F9F5-F78B-443A-AA44-CA2C293C2A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B27987E7-E16B-4CD5-B3F6-0DB25CDF5C08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B27987E7-E16B-4CD5-B3F6-0DB25CDF5C08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B27987E7-E16B-4CD5-B3F6-0DB25CDF5C08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B27987E7-E16B-4CD5-B3F6-0DB25CDF5C08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E4D2999-3F41-4682-9DA6-14CA7C40526F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E4D2999-3F41-4682-9DA6-14CA7C40526F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E4D2999-3F41-4682-9DA6-14CA7C40526F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E4D2999-3F41-4682-9DA6-14CA7C40526F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

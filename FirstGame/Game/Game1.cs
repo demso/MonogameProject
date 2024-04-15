@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿
+
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System;
 using Microsoft.Xna.Framework;
@@ -19,6 +21,8 @@ namespace FirstGame.Game
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
             this.IsFixedTimeStep = true;//false;
+            //Screen.SynchronizeWithVerticalRetrace = true;
+            //Screen.ApplyChanges();
             this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 144f); //60);
         }
 
@@ -43,9 +47,9 @@ namespace FirstGame.Game
             ((MasterScene)Scene).gameTime = gameTime;
             base.Draw(gameTime);
 
-
-            ((MasterScene)Scene).rh.updateAndRender();
-            ((MasterScene)Scene).rh.setCombinedMatrix(Scene.Camera.ViewProjectionMatrix, 0, 0, GraphicsDevice.DisplayMode.Width, GraphicsDevice.DisplayMode.Height);
+            //MasterScene.rh.RenderHere = Scene.SceneRenderTarget;
+            //MasterScene.rh.updateAndRender();
+            //MasterScene.rh.setCombinedMatrix(Scene.Camera.ViewProjectionMatrix, 0, 0, GraphicsDevice.DisplayMode.Width, GraphicsDevice.DisplayMode.Height);
 
             if (msc.phDebug)
             {

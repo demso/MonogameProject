@@ -50,6 +50,8 @@ public class Player : GameEntity
         Body.SetLinearDamping(12f);
         AddComponent(Body);
 
+        
+
         Body.Body.UserData = this;
 
         AddComponent(fixture);
@@ -58,7 +60,6 @@ public class Player : GameEntity
         Transform.SetPosition(350, 350);
     }
     
-
     public override void Kill()
     {
         base.Kill();

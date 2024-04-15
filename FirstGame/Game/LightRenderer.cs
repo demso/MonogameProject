@@ -16,8 +16,6 @@ namespace FirstGame.Game
         RayHandler _rayHandler;
         public LightRenderer(RayHandler rh, int renderOrder = 1) : base(renderOrder)
         {
-            //RenderTexture = new RenderTexture();
-            //RenderTargetClearColor = Color.Red;
             _rayHandler = rh;
         }
 
@@ -28,7 +26,7 @@ namespace FirstGame.Game
             BeginRender(cam);
 
             _rayHandler.setCombinedMatrix(cam.ViewProjectionMatrix, 0, 0, Core.GraphicsDevice.DisplayMode.Width, Core.GraphicsDevice.DisplayMode.Height);
-            _rayHandler.updateAndRender();
+            _rayHandler.updateAndRender(scene.SceneRenderTarget);
 
             EndRender();
         }

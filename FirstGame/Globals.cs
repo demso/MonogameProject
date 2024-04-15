@@ -20,5 +20,7 @@ namespace FirstGame
             //Contact groups
             PlayerCG = 42,
             LightCG = 10;
+
+        static Dictionary<string, int> tiles = new Dictionary<string, int>();
     }
 }
