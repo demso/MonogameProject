@@ -17,7 +17,6 @@ using Nez.Farseer;
 using Nez.Sprites;
 using Nez.Textures;
 using Nez.Tiled;
-using Penumbra;
 using Light = Box2DLight.Light;
 
 namespace FirstGame.Game
@@ -36,9 +35,7 @@ namespace FirstGame.Game
         float zoomStep = 0.1f;
         internal bool phDebug = false;
         internal static Sprite sprite;
-        internal PenumbraComponent penumbra;
         internal GameTime gameTime;
-        private PointLight _light;
         internal static RayHandler rh;
         static SpriteBatch spriteBatch;
         public static bool Toggle;

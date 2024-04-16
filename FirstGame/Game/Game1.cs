@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System;
 using Microsoft.Xna.Framework;
-using Penumbra;
-using Nez.Farseer;
-using System.Diagnostics;
 
 namespace FirstGame.Game
 {

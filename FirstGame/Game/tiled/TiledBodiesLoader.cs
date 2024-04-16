@@ -6,7 +6,6 @@ using FirstGame.Game.factories;
 using Microsoft.Xna.Framework;
 using Nez.Farseer;
 using Nez.Tiled;
-using Penumbra;
 
 namespace FirstGame.Game.tiled;
 
