@@ -94,6 +94,24 @@
 #begin assets/tiledmap/wide.png
 /copy:assets/tiledmap/wide.png
 
+#begin bloom/BloomCombine.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:bloom/BloomCombine.fx
+
+#begin bloom/BloomExtract.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:bloom/BloomExtract.fx
+
+#begin bloom/GaussianBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:bloom/GaussianBlur.fx
+
 #begin DiffuseEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor

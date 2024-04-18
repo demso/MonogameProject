@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using BloomPostprocess;
 using Box2DLight;
 using Box2DLight.box2dlight.shaders;
 using Box2DLight.shaders;
@@ -9,8 +10,7 @@ using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
-using Nez.Textures;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using BloomSettings = BloomPostprocess.BloomSettings;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Box2DLight
@@ -30,6 +30,8 @@ namespace Box2DLight
         private Effect blurShader;
         private Effect diffuseShader;
         private Effect testEf;
+
+        private BloomComponent bloomComponent;
 
         public SpriteBatch spriteBatch;
 
@@ -58,6 +60,9 @@ namespace Box2DLight
             pingPongBuffer = new RenderTarget2D(graphicsDevice, fboWidth, fboHeight, false, SurfaceFormat.ColorSRgb, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
 
             spriteBatch = new SpriteBatch(Core.GraphicsDevice);
+
+            bloomComponent = new BloomComponent();
+            bloomComponent.Settings = BloomSettings.PresetSettings[1];
 
             lightMapMesh = CreateLightMapMesh();
 
@@ -123,35 +128,43 @@ namespace Box2DLight
 
         public void GaussianBlur()
         {
-            Core.GraphicsDevice.SetRenderTarget(pingPongBuffer);
-            Core.GraphicsDevice.Clear(Color.Transparent);
+            bloomComponent.BeginDraw();
+
+            spriteBatch.Begin(0, BlendState.Opaque);
+            spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
+            spriteBatch.End();
+
+            bloomComponent.Draw(frameBuffer);
+
+            //Core.GraphicsDevice.SetRenderTarget(pingPongBuffer);
+            //Core.GraphicsDevice.Clear(Color.Transparent);
             
-            blurShader.Parameters["isDiffuse"].SetValue(RayHandler.isDiffuse);
+            //blurShader.Parameters["isDiffuse"].SetValue(RayHandler.isDiffuse);
 
-            for (int i = 0; i < rayHandler.blurNum; i++)
-            {
-                Core.GraphicsDevice.SetRenderTarget(pingPongBuffer);
+            //for (int i = 0; i < rayHandler.blurNum; i++)
+            //{
+            //    Core.GraphicsDevice.SetRenderTarget(pingPongBuffer);
 
-                //vertical
-                {
-                    blurShader.Parameters["_sampleOffsets"].SetValue(_sampleVertOffsets);
+            //    //vertical
+            //    {
+            //        blurShader.Parameters["_sampleOffsets"].SetValue(_sampleVertOffsets);
 
-                    spriteBatch.Begin(effect: blurShader);
-                    spriteBatch.Draw(frameBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-                    spriteBatch.End();
-                }
+            //        spriteBatch.Begin(0, BlendState.Opaque, null, null, null, blurShader);
+            //        spriteBatch.Draw(frameBuffer, graphicsDevice.Viewport.Bounds, Color.White);
+            //        spriteBatch.End();
+            //    }
 
-                Core.GraphicsDevice.SetRenderTarget(frameBuffer);
+            //    Core.GraphicsDevice.SetRenderTarget(frameBuffer);
 
-                //horizontal
-                {
-                    blurShader.Parameters["_sampleOffsets"].SetValue(_sampleHorOffsets);
+            //    //horizontal
+            //    {
+            //        blurShader.Parameters["_sampleOffsets"].SetValue(_sampleHorOffsets);
 
-                    spriteBatch.Begin(effect: blurShader, blendState: BlendState.Opaque);
-                    spriteBatch.Draw(pingPongBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-                    spriteBatch.End();
-                }
-            }
+            //        spriteBatch.Begin(0, BlendState.Opaque, null, null, null, blurShader);
+            //        spriteBatch.Draw(pingPongBuffer, graphicsDevice.Viewport.Bounds, Color.White);
+            //        spriteBatch.End();
+            //    }
+            //}
         }
 
         public void Dispose()
