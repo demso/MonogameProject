@@ -12,7 +12,7 @@ namespace Box2DLight.box2dlight.shaders
     {
         static public Effect createLightShader()
         {
-            Effect tmp = Core.Content.Load<Effect>(@"LightEffect");
+            Effect tmp = Core.Content.Load<Effect>(@"assets\shaders\LightEffect");
 
             return tmp;
         }

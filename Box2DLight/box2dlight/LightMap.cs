@@ -27,7 +27,6 @@ namespace Box2DLight
 
         private RayHandler rayHandler;
         private Effect withoutShadowShader;
-        private Effect blurShader;
         private Effect diffuseShader;
         private Effect testEf;
 
@@ -128,43 +127,7 @@ namespace Box2DLight
 
         public void GaussianBlur()
         {
-            bloomComponent.BeginDraw();
-
-            spriteBatch.Begin(0, BlendState.Opaque);
-            spriteBatch.Draw(frameBuffer, Core.GraphicsDevice.Viewport.Bounds, Color.White);
-            spriteBatch.End();
-
             bloomComponent.Draw(frameBuffer);
-
-            //Core.GraphicsDevice.SetRenderTarget(pingPongBuffer);
-            //Core.GraphicsDevice.Clear(Color.Transparent);
-            
-            //blurShader.Parameters["isDiffuse"].SetValue(RayHandler.isDiffuse);
-
-            //for (int i = 0; i < rayHandler.blurNum; i++)
-            //{
-            //    Core.GraphicsDevice.SetRenderTarget(pingPongBuffer);
-
-            //    //vertical
-            //    {
-            //        blurShader.Parameters["_sampleOffsets"].SetValue(_sampleVertOffsets);
-
-            //        spriteBatch.Begin(0, BlendState.Opaque, null, null, null, blurShader);
-            //        spriteBatch.Draw(frameBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-            //        spriteBatch.End();
-            //    }
-
-            //    Core.GraphicsDevice.SetRenderTarget(frameBuffer);
-
-            //    //horizontal
-            //    {
-            //        blurShader.Parameters["_sampleOffsets"].SetValue(_sampleHorOffsets);
-
-            //        spriteBatch.Begin(0, BlendState.Opaque, null, null, null, blurShader);
-            //        spriteBatch.Draw(pingPongBuffer, graphicsDevice.Viewport.Bounds, Color.White);
-            //        spriteBatch.End();
-            //    }
-            //}
         }
 
         public void Dispose()
@@ -175,6 +138,8 @@ namespace Box2DLight
 
             frameBuffer.Dispose();
             pingPongBuffer.Dispose();
+
+            bloomComponent.UnloadContent();
         }
 
         internal void CreateShaders()
@@ -187,7 +152,6 @@ namespace Box2DLight
 
             withoutShadowShader = WithoutShadowShader.CreateShadowShader();
 
-            blurShader = Gaussian.CreateBlurShader();
         }
 
         private void DisposeShaders()
@@ -195,7 +159,6 @@ namespace Box2DLight
             shadowShader?.Dispose();
             diffuseShader?.Dispose();
             withoutShadowShader?.Dispose();
-            blurShader?.Dispose();
         }
 
         private VertexBuffer CreateLightMapMesh()

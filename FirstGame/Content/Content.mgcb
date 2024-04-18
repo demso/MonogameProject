@@ -16,142 +16,66 @@
 #begin assets/ClassicRPG_Sheet.png
 /copy:assets/ClassicRPG_Sheet.png
 
-#begin assets/moon.png
-/copy:assets/moon.png
-
-#begin assets/tiledmap/fallback.png
-/copy:assets/tiledmap/fallback.png
-
-#begin assets/tiledmap/huge.png
-/copy:assets/tiledmap/huge.png
-
-#begin assets/tiledmap/large_stuff.png
-/copy:assets/tiledmap/large_stuff.png
-
-#begin assets/tiledmap/large_terrain.png
-/copy:assets/tiledmap/large_terrain.png
-
-#begin assets/tiledmap/newmap.tmx
-/copy:assets/tiledmap/newmap.tmx
-
-#begin assets/tiledmap/normal_character.png
-/copy:assets/tiledmap/normal_character.png
-
-#begin assets/tiledmap/normal_fields.png
-/copy:assets/tiledmap/normal_fields.png
-
-#begin assets/tiledmap/normal_furniture.png
-/copy:assets/tiledmap/normal_furniture.png
-
-#begin assets/tiledmap/normal_items.png
-/copy:assets/tiledmap/normal_items.png
-
-#begin assets/tiledmap/normal_monsters.png
-/copy:assets/tiledmap/normal_monsters.png
-
-#begin assets/tiledmap/normal_offset.png
-/copy:assets/tiledmap/normal_offset.png
-
-#begin assets/tiledmap/normal_stuff.png
-/copy:assets/tiledmap/normal_stuff.png
-
-#begin assets/tiledmap/normal_terrain.png
-/copy:assets/tiledmap/normal_terrain.png
-
-#begin assets/tiledmap/normal_vehicle_parts.png
-/copy:assets/tiledmap/normal_vehicle_parts.png
-
-#begin assets/tiledmap/Temporary-Maptiles-Large.png
-/copy:assets/tiledmap/Temporary-Maptiles-Large.png
-
-#begin assets/tiledmap/Temporary-maptiles.png
-/copy:assets/tiledmap/Temporary-maptiles.png
-
-#begin assets/tiledmap/Temporary.png
-/copy:assets/tiledmap/Temporary.png
-
-#begin assets/tiledmap/tilesets/normal_character.tsx
-/copy:assets/tiledmap/tilesets/normal_character.tsx
-
-#begin assets/tiledmap/tilesets/normal_fields.tsx
-/copy:assets/tiledmap/tilesets/normal_fields.tsx
-
-#begin assets/tiledmap/tilesets/normal_furniture.tsx
-/copy:assets/tiledmap/tilesets/normal_furniture.tsx
-
-#begin assets/tiledmap/tilesets/normal_items.tsx
-/copy:assets/tiledmap/tilesets/normal_items.tsx
-
-#begin assets/tiledmap/tilesets/normal_monsters.tsx
-/copy:assets/tiledmap/tilesets/normal_monsters.tsx
-
-#begin assets/tiledmap/tilesets/normal_stuff.tsx
-/copy:assets/tiledmap/tilesets/normal_stuff.tsx
-
-#begin assets/tiledmap/tilesets/normal_terrain.tsx
-/copy:assets/tiledmap/tilesets/normal_terrain.tsx
-
-#begin assets/tiledmap/wide.png
-/copy:assets/tiledmap/wide.png
-
-#begin bloom/BloomCombine.fx
+#begin assets/shaders/bloom/BloomCombine.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:bloom/BloomCombine.fx
+/build:assets/shaders/bloom/BloomCombine.fx
 
-#begin bloom/BloomExtract.fx
+#begin assets/shaders/bloom/BloomExtract.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:bloom/BloomExtract.fx
+/build:assets/shaders/bloom/BloomExtract.fx
 
-#begin bloom/GaussianBlur.fx
+#begin assets/shaders/bloom/GaussianBlur.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:bloom/GaussianBlur.fx
+/build:assets/shaders/bloom/GaussianBlur.fx
 
-#begin DiffuseEffect.fx
+#begin assets/shaders/DiffuseEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:DiffuseEffect.fx
+/build:assets/shaders/DiffuseEffect.fx
 
-#begin GaussianEffect.fx
+#begin assets/shaders/LightEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:GaussianEffect.fx
+/build:assets/shaders/LightEffect.fx
 
-#begin LightEffect.fx
+#begin assets/shaders/ShadowEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:LightEffect.fx
+/build:assets/shaders/ShadowEffect.fx
 
-#begin NewGaussianEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Debug
-/processorParam:Defines=
-/build:NewGaussianEffect.fx
-
-#begin ShadowEffect.fx
+#begin assets/shaders/WithoutEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:ShadowEffect.fx
+/build:assets/shaders/WithoutEffect.fx
 
-#begin Texting.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Texting.fx
+#begin assets/tiled/atlases/normal_furniture.png
+/copy:assets/tiled/atlases/normal_furniture.png
 
-#begin WithoutEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:WithoutEffect.fx
+#begin assets/tiled/atlases/normal_items.png
+/copy:assets/tiled/atlases/normal_items.png
+
+#begin assets/tiled/atlases/normal_terrain.png
+/copy:assets/tiled/atlases/normal_terrain.png
+
+#begin assets/tiled/tilesets/normal_furniture.tsx
+/copy:assets/tiled/tilesets/normal_furniture.tsx
+
+#begin assets/tiled/tilesets/normal_items.tsx
+/copy:assets/tiled/tilesets/normal_items.tsx
+
+#begin assets/tiled/tilesets/normal_terrain.tsx
+/copy:assets/tiled/tilesets/normal_terrain.tsx
+
+#begin assets/tiled/worldmap.tmx
+/copy:assets/tiled/worldmap.tmx
 

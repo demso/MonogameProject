@@ -90,9 +90,9 @@ namespace BloomPostprocess
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            bloomExtractEffect = Core.Content.Load<Effect>("bloom/BloomExtract");
-            bloomCombineEffect = Core.Content.Load<Effect>("bloom/BloomCombine");
-            gaussianBlurEffect = Core.Content.Load<Effect>("bloom/GaussianBlur");
+            bloomExtractEffect = Core.Content.Load<Effect>("assets/shaders/bloom/BloomExtract");
+            bloomCombineEffect = Core.Content.Load<Effect>("assets/shaders/bloom/BloomCombine");
+            gaussianBlurEffect = Core.Content.Load<Effect>("assets/shaders/bloom/GaussianBlur");
 
             // Look up the resolution and format of our main backbuffer.
             PresentationParameters pp = GraphicsDevice.PresentationParameters;
@@ -122,7 +122,7 @@ namespace BloomPostprocess
         /// <summary>
         /// Unload your graphics content.
         /// </summary>
-        protected void UnloadContent()
+        public void UnloadContent()
         {
             sceneRenderTarget.Dispose();
             renderTarget1.Dispose();
@@ -140,10 +140,10 @@ namespace BloomPostprocess
         /// component uses it to redirect drawing into its custom rendertarget, so it
         /// can capture the scene image in preparation for applying the bloom filter.
         /// </summary>
-        public void BeginDraw()
-        {
-            GraphicsDevice.SetRenderTarget(sceneRenderTarget);
-        }
+        //public void BeginDraw()
+        //{
+        //    GraphicsDevice.SetRenderTarget(sceneRenderTarget);
+        //}
 
 
         /// <summary>
@@ -152,6 +152,8 @@ namespace BloomPostprocess
         /// </summary>
         public void Draw(RenderTarget2D source)
         {
+            sceneRenderTarget = source;
+
             GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
 
             // Pass 1: draw the scene into rendertarget 1, using a

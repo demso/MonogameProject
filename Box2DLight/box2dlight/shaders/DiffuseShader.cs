@@ -12,7 +12,7 @@ namespace Box2DLight.shaders
     {
         static public Effect CreateShadowShader()
         {
-            Effect tmp = Core.Content.Load<Effect>(@"DiffuseEffect");
+            Effect tmp = Core.Content.Load<Effect>(@"assets\shaders\DiffuseEffect");
 
             return tmp; 
         }

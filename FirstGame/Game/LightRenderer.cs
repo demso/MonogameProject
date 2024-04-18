@@ -23,12 +23,12 @@ namespace FirstGame.Game
         {
             var cam = Camera ?? scene.Camera;
 
-            BeginRender(cam);
+            //BeginRender(cam);
 
             _rayHandler.setCombinedMatrix(cam.ViewProjectionMatrix, 0, 0, Core.GraphicsDevice.DisplayMode.Width, Core.GraphicsDevice.DisplayMode.Height);
             _rayHandler.updateAndRender(scene.SceneRenderTarget);
 
-            EndRender();
+            //EndRender();
         }
     }
 }

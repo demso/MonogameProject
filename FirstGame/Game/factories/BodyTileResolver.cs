@@ -5,6 +5,7 @@ using System;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Nez.Tiled;
+using static FirstGame.Game.entyties.BodyData;
 
 namespace FirstGame.Game.factories;
 
@@ -14,7 +15,7 @@ public class BodyTileResolver
     public enum Type
     {
         FullBody,
-        MetalClosetBody,
+        MetalCloset,
         Window,
     }
     public enum Direction
@@ -36,19 +37,8 @@ public class BodyTileResolver
         Body body = type switch
         {
             Type.FullBody => fullBody(x, y, userData),
-            Type.MetalClosetBody => metalClosetBody(x, y, userData),
+            Type.MetalCloset => metalClosetBody(x, y, userData),
             Type.Window => window(x, y, userData, direction),
-            _ => null
-        };
-        return body;
-    }
-
-    public Body resolveBody(float x, float y, Object userData, Type type)
-    {
-        Body body = type switch
-        {
-            Type.FullBody => fullBody(x, y, userData),
-            Type.MetalClosetBody => metalClosetBody(x, y, userData),
             _ => null
         };
         return body;
@@ -66,20 +56,6 @@ public class BodyTileResolver
 
     public Body window(float x, float y, Object userData, Direction direction)
     {
-        //BodyDef windowHorBodyDef = new BodyDef();
-        //PolygonShape windowHorBox = new PolygonShape();
-        //FixtureDef windowHorFixtureDef = new FixtureDef();
-        //windowHorBox.setAsBox(0.5f, 0.05f);
-        //windowHorFixtureDef.shape = windowHorBox;
-        //windowHorFixtureDef.filter.groupIndex = -10;
-
-        //BodyDef windowVertBodyDef = new BodyDef();
-        //PolygonShape windowVertBox = new PolygonShape();
-        //FixtureDef windowVertFixtureDef = new FixtureDef();
-        //windowVertBox.setAsBox(0.05f, 0.5f);
-        //windowVertFixtureDef.shape = windowVertBox;
-        //windowVertFixtureDef.filter.groupIndex = -10;
-
         tempvec.X = x;
         tempvec.Y = y;
         Body body = new Body(world, tempvec, 0, BodyType.Static, userData);
@@ -99,20 +75,6 @@ public class BodyTileResolver
 
 public Body fullBody(float x, float y, Object userData)
 {
-    //BodyDef fullBodyDef = new BodyDef();
-    //fullBodyDef.position.set(x, y);
-
-    //PolygonShape fullBox = new PolygonShape();
-
-    //FixtureDef fullFixtureDef = new FixtureDef();
-    //fullBox.setAsBox(0.5f, 0.5f);
-    //fullFixtureDef.shape = fullBox;
-    //fullFixtureDef.filter.groupIndex = 0;
-
-    //Body body = world.createBody(fullBodyDef);
-    //body.createFixture(fullFixtureDef);
-    //body.setUserData(userData);
-
     tempvec.X = x;
     tempvec.Y = y;
     Body body = new Body(world, tempvec, 0, BodyType.Static, userData);
@@ -138,10 +100,6 @@ public Body fullBody(float x, float y, Object userData)
 
     public Direction getDirection(TmxLayerTile layerTile)
     {
-        //boolean southWard = cell.getRotation() == TiledMapTileLayer.Cell.ROTATE_0 && cell.getFlipVertically() && cell.getFlipVertically();
-        //boolean northWard = cell.getRotation() == TiledMapTileLayer.Cell.ROTATE_0 && !cell.getFlipVertically() && !cell.getFlipVertically();
-        //boolean eastWard = cell.getRotation() == TiledMapTileLayer.Cell.ROTATE_270 && !cell.getFlipVertically() && !cell.getFlipVertically();
-        //boolean westWard = cell.getRotation() == TiledMapTileLayer.Cell.ROTATE_90 && !cell.getFlipVertically() && !cell.getFlipVertically();
 
         bool southWard = !layerTile.DiagonalFlip &&  layerTile.VerticalFlip,
              northWard = !layerTile.DiagonalFlip &&  !layerTile.VerticalFlip,

@@ -43,15 +43,9 @@ namespace FirstGame.Game
             
             ((MasterScene)Scene).gameTime = gameTime;
             base.Draw(gameTime);
-
-            //MasterScene.rh.RenderHere = Scene.SceneRenderTarget;
-            //MasterScene.rh.updateAndRender();
-            //MasterScene.rh.setCombinedMatrix(Scene.Camera.ViewProjectionMatrix, 0, 0, GraphicsDevice.DisplayMode.Width, GraphicsDevice.DisplayMode.Height);
-
+           
             if (msc.phDebug)
             {
-                //msc.debugView.RemoveFlags(FSDebugView.DebugViewFlags.Shape);
-                //msc.debugView.AppendFlags(FSDebugView.DebugViewFlags.PolygonPoints);
                 msc.debugView.Render(Graphics.Instance.Batcher, msc.Camera);
             }
         }
