@@ -31,7 +31,7 @@ namespace FirstGame.Game
         public Entity tiledEntity;
         public Entity debugViewEntity;
         public TmxMap tiledMap;
-        public FSWorld world;
+        public MyFSWorld world;
         public FSDebugView debugView;
 
         public Renderer renderer;

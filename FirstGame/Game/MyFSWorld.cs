@@ -8,9 +8,13 @@ using Nez.Farseer;
 
 namespace FirstGame.Game
 {
-    internal class MyFSWorld : FSWorld
+    public class MyFSWorld : FSWorld
     {
-        private float accumulator = 0;
+        private float _accumulator = 0;
+        
+        public float MaxFixedUpdateTime = 0.25f;
+
+        public float TimeStep = 1/30f;
         public override void Update()
         {
             if (EnableMousePicking)
@@ -38,9 +42,9 @@ namespace FirstGame.Game
 
             //World.Step(1/30f);
 
-            float frameTime = Time.DeltaTime;
-            accumulator += frameTime;
-            while (accumulator >= TimeStep)
+            float frameTime = Math.Min(Time.DeltaTime, MaxFixedUpdateTime);
+            _accumulator += frameTime;
+            while (_accumulator >= TimeStep)
             {
                 MasterScene masterScene = Scene as MasterScene;
                 if (masterScene != null)
@@ -48,7 +52,7 @@ namespace FirstGame.Game
 
                 World.Step(TimeStep);
 
-                accumulator -= TimeStep;
+                _accumulator -= TimeStep;
             }
         }
     }

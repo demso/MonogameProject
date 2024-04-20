@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Nez.Analysis;
 
 
@@ -17,10 +14,6 @@ namespace Nez.Farseer
 		/// minimum delta time step for the simulation. The min of Time.deltaTime and this will be used for the physics step
 		/// </summary>
 		public float MinimumUpdateDeltaTime = 1f / 30;
-		
-		public float MaxFixedUpdateTime = 0.25f;
-
-		public float TimeStep = 1/30f;
 
 		/// <summary>
 		/// if true, the left mouse button will be used for picking and dragging physics objects around
@@ -68,7 +61,7 @@ namespace Nez.Farseer
 			World = null;
 		}
 
-		private float accumulator = 0;
+
 		public override void Update()
 		{
 			if (EnableMousePicking)
@@ -94,7 +87,7 @@ namespace Nez.Farseer
 				}
 			}
 
-			//World.Step(1/30f);
+			World.Step(MathHelper.Min(Time.DeltaTime, MinimumUpdateDeltaTime));
 		}
 
 		#endregion
