@@ -16,6 +16,9 @@
 #begin assets/ClassicRPG_Sheet.png
 /copy:assets/ClassicRPG_Sheet.png
 
+#begin assets/selection.png
+/copy:assets/selection.png
+
 #begin assets/shaders/bloom/BloomCombine.fx
 /importer:EffectImporter
 /processor:EffectProcessor

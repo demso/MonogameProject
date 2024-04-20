@@ -9,8 +9,8 @@ namespace FirstGame.Game.factories
 {
     public static class Tiles
     {
-        public static Dictionary<string, TmxTilesetTile> TilesDic;
-        public static TmxTilesetTile getTile(String name)
+        public static Dictionary<string, TmxTilesetTile> TilesDic = new Dictionary<string, TmxTilesetTile>();
+        public static TmxTilesetTile GetTile(string name)
         {
             return TilesDic[name];
         }

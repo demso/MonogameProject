@@ -1,4 +1,5 @@
-﻿using Box2DLight;
+﻿using System;
+using Box2DLight;
 using FarseerPhysics.Dynamics;
 using FirstGame.Game.components;
 using FirstGame.Game.tiled;
@@ -7,12 +8,14 @@ using Microsoft.Xna.Framework.Input;
 using Nez.Farseer;
 using Nez;
 using FirstGame.Game.entyties;
+using FirstGame.Game.objects.bodies;
+using FirstGame.Game.objects.bodies.player;
 using Microsoft.Xna.Framework;
 
 namespace FirstGame.Game
 {
     //end() initialize()
-    internal partial class MasterScene
+    public partial class MasterScene
     {
         public override void Initialize()
         {
@@ -20,6 +23,8 @@ namespace FirstGame.Game
             Graphics.Instance.Batcher.SetIgnoreRoundingDestinations(true);
 
             Instance = this;
+
+            LoadTextures();
 
             ClearColor = Color.Black;
             renderer = new DefaultRenderer();
@@ -30,20 +35,20 @@ namespace FirstGame.Game
             spriteBatch = new SpriteBatch(Core.GraphicsDevice);
 
             FSConvert.SetDisplayUnitToSimUnitRatio(32);
-            world = GetOrCreateSceneComponent<FSWorld>();
-            world.TimeStep = 1 / 144f;
+            world = GetOrCreateSceneComponent<MyFSWorld>();
+            world.TimeStep = physicsStep;
             world.World.Gravity = Vector2.Zero;
             world.World.ContactManager.OnBeginContact = contact =>
             {
                 return
-                    ((BodyData)contact.FixtureA.Body.UserData).OnBeginContact(contact.FixtureA, contact.FixtureB, contact) ||
-                    ((BodyData)contact.FixtureB.Body.UserData).OnBeginContact(contact.FixtureB, contact.FixtureA, contact);
+                    (((BodyData)contact.FixtureA.Body.UserData).GetCollisionHandler()?.OnBeginContact(contact.FixtureA, contact.FixtureB, contact) ?? true) &&
+                    (((BodyData)contact.FixtureB.Body.UserData).GetCollisionHandler()?.OnBeginContact(contact.FixtureB, contact.FixtureA, contact) ?? true);
             };
 
             world.World.ContactManager.OnEndContact = contact =>
             {
-                ((BodyData)contact.FixtureA.Body.UserData).OnEndContact(contact.FixtureA, contact.FixtureB, contact);
-                ((BodyData)contact.FixtureB.Body.UserData).OnEndContact(contact.FixtureB, contact.FixtureA, contact);
+                ((BodyData)contact.FixtureA.Body.UserData).GetCollisionHandler()?.OnEndContact(contact.FixtureA, contact.FixtureB, contact);
+                ((BodyData)contact.FixtureB.Body.UserData).GetCollisionHandler()?.OnEndContact(contact.FixtureB, contact.FixtureA, contact);
             };
 
             rh = new RayHandler(world.World);
@@ -56,10 +61,10 @@ namespace FirstGame.Game
             tiledEntity = CreateEntity("tiledmap");
             tiledEntity.AddComponent(new TiledMapRenderer(tiledMap));
 
-            playerEntity = new Player("Demass");
-            AddEntity(playerEntity);
+            player = new Player("Demass");
+            AddEntity(player);
                 
-            playerEntity.InitBody();
+            player.InitBody();
 
             debugViewEntity = CreateEntity("debug-view")
                 .AddComponent(new PressKeyToPerformAction(Keys.B, e =>
@@ -68,7 +73,7 @@ namespace FirstGame.Game
                 }))
                 .AddComponent(debugView).SetEnabled(false).Entity;
 
-            Camera.Entity.AddComponent(new FollowCamera(playerEntity));
+            //Camera.Entity.AddComponent(new FollowCamera(player));
             Camera.ZoomIn(zoomStep * 4);
             TiledLoader.Load(tiledMap);
 
@@ -80,12 +85,19 @@ namespace FirstGame.Game
             rh.setBlurNum(3);
 
             Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 1300, Color.White, 50, 0, 0);
-            Light.GlobalCollisionCategories = Category.None;
-            Light.GlobalCollisionGroup = Globals.LightCG;
+            Light.GlobalCollisionCategories = (Category) Globals.LIGHT_CONTACT_FILTER;
+            Light.GlobalCollidesWith = Category.All;
+            Light.GlobalCollisionGroup = Globals.LIGHT_CONTACT_GROUP;
+           // Light.GlobalCollisionGroup = Globals.LIGHT_CONTACT_GROUP;
             light.SetSoft(true);
             light.SetSoftnessLength(1.5f);
-            light.AttachToBody(playerEntity.Body.Body);
+            light.AttachToBody(player.Body.Body);
             light.SetIgnoreAttachedBody(true);
+        }
+
+        public void LoadTextures()
+        {
+            UserSelection = Content.LoadTexture("Content/assets/selection.png");
         }
 
         public override void End()

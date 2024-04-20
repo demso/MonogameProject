@@ -6,12 +6,12 @@ using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Nez.Tiled;
 using static FirstGame.Game.entyties.BodyData;
+using FirstGame.Game.objects.bodies;
 
 namespace FirstGame.Game.factories;
 
-public class BodyTileResolver
+public class BodyResolver(World world)
 {
-    World world;
     public enum Type
     {
         FullBody,
@@ -28,23 +28,19 @@ public class BodyTileResolver
 
     private Vector2 tempvec = new Vector2();
 
-    public BodyTileResolver(World world)
-    {
-        this.world = world;
-    }
-    public Body resolveBody(float x, float y, Object userData, Type type, Direction direction)
+    public Body ResolveBody(float x, float y, Object userData, Type type, Direction direction)
     {
         Body body = type switch
         {
-            Type.FullBody => fullBody(x, y, userData),
-            Type.MetalCloset => metalClosetBody(x, y, userData),
-            Type.Window => window(x, y, userData, direction),
+            Type.FullBody => FullBody(x, y, userData),
+            Type.MetalCloset => MetalClosetBody(x, y, userData),
+            Type.Window => Window(x, y, userData, direction),
             _ => null
         };
         return body;
     }
 
-    public Body metalClosetBody(float x, float y, Object userData)
+    public Body MetalClosetBody(float x, float y, Object userData)
     {
         tempvec.X = x;
         tempvec.Y = y;
@@ -54,7 +50,7 @@ public class BodyTileResolver
         return body;
     }
 
-    public Body window(float x, float y, Object userData, Direction direction)
+    public Body Window(float x, float y, Object userData, Direction direction)
     {
         tempvec.X = x;
         tempvec.Y = y;
@@ -68,20 +64,20 @@ public class BodyTileResolver
             (Direction.West) => FixtureFactory.AttachRectangle(0.1f, 1f, 1, new Vector2(-0.4f, 0), body)
         };
 
-        fixture.CollisionGroup = Globals.LightCG;
+        fixture.CollisionGroup = Globals.LIGHT_CONTACT_GROUP;
 
         return body;
     }
 
-public Body fullBody(float x, float y, Object userData)
-{
-    tempvec.X = x;
-    tempvec.Y = y;
-    Body body = new Body(world, tempvec, 0, BodyType.Static, userData);
-    Fixture fixture = FixtureFactory.AttachRectangle(1f, 1f, 1, Vector2.Zero, body);
+    public Body FullBody(float x, float y, Object userData)
+    {
+        tempvec.X = x;
+        tempvec.Y = y;
+        Body body = new Body(world, tempvec, 0, BodyType.Static, userData);
+        Fixture fixture = FixtureFactory.AttachRectangle(1f, 1f, 1, Vector2.Zero, body);
 
-    return body;
-}
+        return body;
+    }
 
 //public Body transparentFullBody(float x, float y, Object userData)
 //{
@@ -98,7 +94,7 @@ public Body fullBody(float x, float y, Object userData)
 //    return body;
 //}
 
-    public Direction getDirection(TmxLayerTile layerTile)
+    public Direction GetDirection(TmxLayerTile layerTile)
     {
 
         bool southWard = !layerTile.DiagonalFlip &&  layerTile.VerticalFlip,
@@ -116,5 +112,14 @@ public Body fullBody(float x, float y, Object userData)
             return Direction.East;
 
         return Direction.North;
+    }
+
+    public static Filter CreateFilter(short mask, short category, short group)
+    {
+        Filter filter = new Filter();
+        filter.maskBits = mask;
+        filter.categoryBits = category;
+        filter.groupIndex = group;
+        return filter;
     }
 }

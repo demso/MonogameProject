@@ -166,6 +166,18 @@ namespace Nez
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void FixedUpdate()
+		{
+			var entitiesList = GetTagList(1);
+			for (var i = 0; i < entitiesList.Length; i++)
+			{
+				var entity = entitiesList.Buffer[i];
+				if (entity.Enabled)
+					entity.FixedUpdate();
+			}
+		}
+
 		public void UpdateLists()
 		{
 			// handle removals

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
@@ -19,14 +20,14 @@ namespace Nez.Farseer
 		
 		public float MaxFixedUpdateTime = 0.25f;
 
-		public float TimeStep = 1/75f;
+		public float TimeStep = 1/30f;
 
 		/// <summary>
 		/// if true, the left mouse button will be used for picking and dragging physics objects around
 		/// </summary>
 		public bool EnableMousePicking;
 
-		FixedMouseJoint _mouseJoint;
+		protected FixedMouseJoint _mouseJoint;
 
 
 		public FSWorld() : this(new Vector2(0, 9.82f))
@@ -93,17 +94,7 @@ namespace Nez.Farseer
 				}
 			}
 
-			
-			float frameTime = Math.Min(Time.DeltaTime, MaxFixedUpdateTime);
-			accumulator += frameTime;
-			while (accumulator >= TimeStep)
-			{
-				var curTimeStep = TimeStep;
-			
-				World.Step(curTimeStep);
-			
-				accumulator -= curTimeStep;
-			}
+			//World.Step(1/30f);
 		}
 
 		#endregion

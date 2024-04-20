@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FirstGame.Game.components;
+using FirstGame.Game.entyties;
+using FirstGame.Game.objects;
+using FirstGame.Game.objects.bodies;
+using FirstGame.Game.objects.bodies.player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Nez;
@@ -12,49 +17,69 @@ using Nez.Farseer;
 
 namespace FirstGame.Game
 {
-    internal class PlayerController : Component, IUpdatable
+    internal class PlayerController : Component, IFixedUpdatable, IUpdatable
     {
-        public float moveSpeed = 20f;
-        private Vector2 velocity = new Vector2(0, 0);
-        private Vector2 movement = new Vector2();
+        private Vector2 moveVector;
+        private Vector2 moveImpulse;
+        private Player player;
 
-        private SubpixelFloat sfX = new SubpixelFloat();
-        private SubpixelFloat sfY = new SubpixelFloat();
-        private SubpixelVector2 sv = new SubpixelVector2();
         public void Update()
         {
-            velocity = Vector2.Zero;
+            if (Input.IsKeyPressed(Keys.E))
+            {
+                if (player.ClosestObject?.UserData is IInteractable interactable)
+                {
+                    interactable.Interact(player);
+                }
+            }
+        }
+
+        public void FixedUpdate()
+        {
+           
+            ApplyMovement();
+        }
+
+        public void ApplyMovement()
+        {
+            moveVector = Vector2.Zero;
             if (Input.IsKeyDown(Keys.Right) || Input.IsKeyDown(Keys.D))
             {
-                velocity.X = 1;
+                moveVector.X = 1;
             }
             if (Input.IsKeyDown(Keys.Left) || Input.IsKeyDown(Keys.A))
             {
-                velocity.X = -1;
+                moveVector.X = -1;
             }
             if (Input.IsKeyDown(Keys.Up) || Input.IsKeyDown(Keys.W))
             {
-                velocity.Y = -1;
+                moveVector.Y = -1;
             }
             if (Input.IsKeyDown(Keys.Down) || Input.IsKeyDown(Keys.S))
             {
-                velocity.Y = 1;
+                moveVector.Y = 1;
             }
-            if (!velocity.Equals(Vector2.Zero))
+            if (!moveVector.Equals(Vector2.Zero))
             {
-                velocity.Normalize();
+                moveVector.Normalize();
             }
             if (Input.IsKeyDown(Keys.LeftShift))
-                velocity *= moveSpeed * 1.5f;
+                moveVector *= 1.5f;
             else if (Input.IsKeyDown(Keys.C))
-                velocity *= moveSpeed * 0.75f;
-            else
-                velocity *= moveSpeed;
+                moveVector *= 0.75f;
 
-            movement = velocity;
             FSRigidBody rigidBody = Entity.Components.GetComponent<FSRigidBody>(true);
             Body body = rigidBody.Body;
-            body.ApplyLinearImpulse(movement);
+
+            moveImpulse = ((moveVector * player.moveSpeed * body.Mass) / (1 - MasterScene.Instance.physicsStep * body.LinearDamping)) * MasterScene.Instance.physicsStep * 10f;
+
+            if (!moveImpulse.Equals(Vector2.Zero))
+                body.ApplyLinearImpulse(moveImpulse);
+        }
+
+        public override void Initialize()
+        {
+            player = (Player) Entity;
         }
     }
 }

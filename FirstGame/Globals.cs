@@ -9,18 +9,18 @@ namespace FirstGame
     public static class Globals
     {
         public const short
-            //Contact filters
-            DefaultCF = 0x0001,                 //00000000 00000001
-            PlayerCF = 0x0008,                 //00000000 00001000
-            PlayerInteractCF = 0x0002,                 //00000000 00000010
-            LightCF = short.MinValue,        //10000000 00000000
-            BulletCF = 0x0004,                 //00000000 00000100
-            ZombieCF = 0x0010,                 //00000000 00010000
-            AllCF = -1,                     //11111111 11111111
-            //Contact groups
-            PlayerCG = 42,
-            LightCG = 10;
+            DEFAULT_CONTACT_FILTER = 0x0001, //00000000 00000001
+            PLAYER_CONTACT_FILTER = 0x0008, //00000000 00001000
+            PLAYER_INTERACT_CONTACT_FILTER = 0x0002, //00000000 00000010
+            LIGHT_CONTACT_FILTER = short.MinValue, //10000000 00000000
+            BULLET_CONTACT_FILTER = 0x0004, //00000000 00000100
+            ZOMBIE_CONTACT_FILTER = 0x0010, //00000000 00010000
+            ALL_CONTACT_FILTER = -1, //11111111 11111111
+            NONE_CONTACT_FILTER = 0X0000,
 
-        static Dictionary<string, int> tiles = new Dictionary<string, int>();
+            PLAYER_CONTACT_GROUP = -42,
+            LIGHT_CONTACT_GROUP = -10,
+
+            TAG_FOR_FIXED_UPDATE = 1;
     }
 }

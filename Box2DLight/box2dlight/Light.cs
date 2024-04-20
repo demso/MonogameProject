@@ -325,10 +325,10 @@ namespace Box2DLight
 
         internal float ray(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
         {
-            if ((GlobalCollidesWith != null || GlobalCollisionGroup != 0) && GlobalContactFilter(fixture))
+            if ((GlobalCollidesWith != null && GlobalCollisionCategories != null || GlobalCollisionGroup != 0) && !GlobalContactFilter(fixture))
                 return -1;
 
-            if ((CollidesWith != null || CollisionGroup != 0) && ContactFilter(fixture))
+            if ((CollidesWith != null && CollisionCategories != null || CollisionGroup != 0) && !ContactFilter(fixture))
                 return -1;
 
             if (ignoreBody && fixture.Body == GetBody())
@@ -345,8 +345,8 @@ namespace Box2DLight
                 CollisionGroup == fixtureB.CollisionGroup)
                 return CollisionGroup > 0;
 
-            return ((this.CollidesWith & fixtureB.CollisionCategories) == Category.None) &
-                   ((this.CollisionCategories & fixtureB.CollidesWith) == Category.None);
+            return ((this.CollidesWith & fixtureB.CollisionCategories) != Category.None) &
+                   ((this.CollisionCategories & fixtureB.CollidesWith) != Category.None);
         }
 
         public void SetContactFilter(Category collisionCategories, Category collidesWith, short collideGroup)
@@ -362,8 +362,8 @@ namespace Box2DLight
                 GlobalCollisionGroup == fixtureB.CollisionGroup)
                 return GlobalCollisionGroup > 0;
 
-            return ((GlobalCollidesWith & fixtureB.CollisionCategories) == Category.None) &
-                   ((GlobalCollisionCategories & fixtureB.CollidesWith) == Category.None);
+            return ((GlobalCollidesWith & fixtureB.CollisionCategories) != Category.None) &
+                   ((GlobalCollisionCategories & fixtureB.CollidesWith) != Category.None);
         }
 
         public static void SetGlobalContactFilter(Category collisionCategories, Category collidesWith, short collideGroup)

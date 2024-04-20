@@ -2,6 +2,7 @@
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FirstGame.Game.entyties;
+using FirstGame.Game.objects;
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Farseer;
@@ -79,14 +80,21 @@ public class GameEntity : Entity, BodyData
         return EntityKind + " Entity";
     }
 
-    public virtual bool OnBeginContact(Fixture thisFixture, Fixture otherFixture, Contact contact)
+    public virtual BaseCollisionHandler GetCollisionHandler()
     {
-        return true;
+        return null;
     }
 
-    public virtual void OnEndContact(Fixture thisFixture, Fixture otherFixture, Contact contact)
-    {
-    }
+    //public virtual bool OnBeginContact(Fixture thisFixture, Fixture otherFixture, Contact contact)
+    //{
+    //    return true;
+    //}
+
+    //public virtual void OnEndContact(Fixture thisFixture, Fixture otherFixture, Contact contact)
+    //{
+    //}
+
+    
 
     public virtual void Kill(){
         IsAlive = false;

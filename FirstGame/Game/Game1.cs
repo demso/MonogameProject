@@ -17,10 +17,10 @@ namespace FirstGame.Game
         {
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
-            this.IsFixedTimeStep = true;//false;
-            //Screen.SynchronizeWithVerticalRetrace = true;
-            //Screen.ApplyChanges();
-            this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 144f); //60);
+            //this.IsFixedTimeStep = true;//false;
+            Screen.SynchronizeWithVerticalRetrace = true;
+            Screen.ApplyChanges();
+            //this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 75f); //60);
         }
 
         protected override void Initialize()

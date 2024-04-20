@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FarseerPhysics.Dynamics;
+using FirstGame.Game.objects.bodies.player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,28 +12,26 @@ using Nez;
 using Nez.Farseer;
 using Nez.Sprites;
 using Nez.Textures;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FirstGame.Game.components
 {
-    internal class BodySpriteRenderer : SpriteRenderer
+    internal class PlayerRenderer : SpriteRenderer
     {
-        Vector2 oldPos = new Vector2();
-        Vector2 pos2 = new Vector2();
-        Vector2 pos3 = new Vector2();
-
-        public BodySpriteRenderer(Texture2D texture) : base(texture)
+        private Player player;
+        public PlayerRenderer(Texture2D texture) : base(texture)
         {
         }
 
-        public BodySpriteRenderer(Sprite sprite) : base(sprite)
+        public PlayerRenderer(Sprite sprite) : base(sprite)
         {
             
         }
 
-        public override void OnAddedToEntity()
+        public override void Initialize()
         {
-            base.OnAddedToEntity();
-            oldPos = Entity.Position;
+            base.Initialize();
+            player = MasterScene.Instance.player;
         }
 
         public override void Render(Batcher batcher, Camera camera)

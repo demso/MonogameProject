@@ -21,6 +21,9 @@ namespace Nez
 		/// </summary>
 		FastList<IUpdatable> _updatableComponents = new FastList<IUpdatable>();
 
+		//For fixed update
+		FastList<IFixedUpdatable> _fixedUpdatableComponents = new FastList<IFixedUpdatable>();
+
 		/// <summary>
 		/// The list of components that were added this frame. Used to group the components so we can process them simultaneously
 		/// </summary>
@@ -88,6 +91,7 @@ namespace Nez
 
 			_components.Clear();
 			_updatableComponents.Clear();
+			_fixedUpdatableComponents.Clear();
 			_componentsToAdd.Clear();
 			_componentsToRemove.Clear();
 		}
@@ -105,6 +109,9 @@ namespace Nez
 				// deal with IUpdatable
 				if (component is IUpdatable)
 					_updatableComponents.Remove(component as IUpdatable);
+
+				if (component is IFixedUpdatable)
+					_fixedUpdatableComponents.Remove(component as IFixedUpdatable);
 			}
 		}
 
@@ -118,6 +125,9 @@ namespace Nez
 
 				if (component is IUpdatable)
 					_updatableComponents.Add(component as IUpdatable);
+
+				if (component is IFixedUpdatable)
+					_fixedUpdatableComponents.Add(component as IFixedUpdatable);
 			}
 		}
 
@@ -150,6 +160,9 @@ namespace Nez
 
 					if (component is IUpdatable)
 						_updatableComponents.Add(component as IUpdatable);
+
+					if (component is IFixedUpdatable fixedComponent)
+						_fixedUpdatableComponents.Add(fixedComponent);
 
 					_components.Add(component);
 					_tempBufferList.Add(component);
@@ -189,6 +202,10 @@ namespace Nez
 			// deal with IUpdatable
 			if (component is IUpdatable)
 				_updatableComponents.Remove(component as IUpdatable);
+
+			//deal with IFixUpdatable
+			if (component is IFixedUpdatable)
+				_fixedUpdatableComponents.Remove(component as IFixedUpdatable);
 
 			component.OnRemovedFromEntity();
 			component.Entity = null;
@@ -271,6 +288,18 @@ namespace Nez
 			{
 				if (_updatableComponents.Buffer[i].Enabled && (_updatableComponents.Buffer[i] as Component).Enabled)
 					_updatableComponents.Buffer[i].Update();
+			}
+		}
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal void FixedUpdate()
+		{
+			UpdateLists();
+			for (var i = 0; i < _fixedUpdatableComponents.Length; i++)
+			{
+				if (((Component)_fixedUpdatableComponents.Buffer[i]).Enabled)
+					_fixedUpdatableComponents.Buffer[i].FixedUpdate();
 			}
 		}
 

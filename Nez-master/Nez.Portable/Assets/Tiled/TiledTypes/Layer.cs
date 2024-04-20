@@ -62,30 +62,20 @@ namespace Nez.Tiled
 
 		int? _tilesetTileIndex;
 
+		private TmxTilesetTile _tilesetTile;
+
 		/// <summary>
 		/// gets the TmxTilesetTile for this TmxLayerTile if it exists. TmxTilesetTile only exist for animated tiles and tiles with attached
 		/// properties.
 		/// </summary>
 		public TmxTilesetTile TilesetTile
 		{
-			get
+			get => _tilesetTile;
+			set
 			{
-				if (!_tilesetTileIndex.HasValue)
-				{
-					_tilesetTileIndex = -1;
-					if (Tileset.FirstGid <= Gid)
-					{
-						if (Tileset.Tiles.TryGetValue(Gid - Tileset.FirstGid, out var tilesetTile))
-						{
-							_tilesetTileIndex = Gid - Tileset.FirstGid;
-						}
-					}
-				}
-
-				if (_tilesetTileIndex.Value < 0)
-					return null;
-
-				return Tileset.Tiles[_tilesetTileIndex.Value];
+				_tilesetTileIndex = value.Id;
+				Gid = value.Tileset.FirstGid + value.Id;
+				_tilesetTile = value;
 			}
 		}
 
@@ -112,8 +102,8 @@ namespace Nez.Tiled
 			// Save GID remainder to int
 			Gid = (int)rawGid;
 			Tileset = map.GetTilesetForTileGid(Gid);
-			
-			
+
+			Tileset.Tiles.TryGetValue(Gid - Tileset.FirstGid, out _tilesetTile);
 		}
 	}
 

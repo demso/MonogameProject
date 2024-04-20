@@ -391,6 +391,8 @@ namespace Nez
 		/// </summary>
 		public virtual void Update() => Components.Update();
 
+		public virtual void FixedUpdate() => Components.FixedUpdate();
+
 		/// <summary>
 		/// called if Core.debugRenderEnabled is true by the default renderers. Custom renderers can choose to call it or not.
 		/// </summary>
