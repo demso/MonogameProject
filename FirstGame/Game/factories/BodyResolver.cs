@@ -64,7 +64,7 @@ public class BodyResolver(World world)
             (Direction.West) => FixtureFactory.AttachRectangle(0.1f, 1f, 1, new Vector2(-0.4f, 0), body)
         };
 
-        fixture.CollisionGroup = Globals.LIGHT_CONTACT_GROUP;
+        fixture.CollisionGroup = Globals.TRANSPARENT_GROUP;
 
         return body;
     }

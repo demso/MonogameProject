@@ -87,7 +87,7 @@ namespace FirstGame.Game
             Box2dLight.PointLight light = new Box2dLight.PointLight(rh, 1300, Color.White, 50, 0, 0);
             Light.GlobalCollisionCategories = (Category) Globals.LIGHT_CONTACT_FILTER;
             Light.GlobalCollidesWith = Category.All;
-            Light.GlobalCollisionGroup = Globals.LIGHT_CONTACT_GROUP;
+            Light.GlobalCollisionGroup = Globals.TRANSPARENT_GROUP;
            // Light.GlobalCollisionGroup = Globals.LIGHT_CONTACT_GROUP;
             light.SetSoft(true);
             light.SetSoftnessLength(1.5f);

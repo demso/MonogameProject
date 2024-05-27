@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.10.2" name="normal_terrain" tilewidth="32" tileheight="32" tilecount="512" columns="16">
+ <properties>
+  <property name="collision_layer_0" value="1"/>
+  <property name="collision_mask_0" value="1"/>
+ </properties>
  <image source="../atlases/normal_terrain.png" width="512" height="1024"/>
  <tile id="0">
   <properties>
@@ -233,95 +237,174 @@
    <property name="body type" value="fullbody"/>
    <property name="name" value="t_wall_beton_nswe"/>
   </properties>
+  <objectgroup draworder="index" id="3">
+   <object id="2" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
  <tile id="46">
   <properties>
    <property name="body type" value="fullbody"/>
    <property name="name" value="t_wall_beton_se"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
  <tile id="47">
   <properties>
    <property name="body type" value="fullbody"/>
    <property name="name" value="t_wall_beton_ne"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="48">
+ <tile id="48" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_belon_nw"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="49">
+ <tile id="49" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_sw"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="50">
+ <tile id="50" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_ns"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="51">
+ <tile id="51" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_we"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="52">
+ <tile id="52" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_s"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="53">
+ <tile id="53" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_e"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="54">
+ <tile id="54" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_n"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="55">
+ <tile id="55" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_w"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="56">
+ <tile id="56" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_swe"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
  </tile>
- <tile id="57">
+ <tile id="57" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_nse"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="58">
+ <tile id="58" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_nwe"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" type="collision" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
- <tile id="59">
+ <tile id="59" type="staticbody">
   <properties>
    <property name="body type" value="fullbody"/>
+   <property name="collision_layer_0" value="1-7"/>
+   <property name="collision_mask" value="1-7"/>
    <property name="name" value="t_wall_beton_nsw"/>
+   <property name="physics_layer" type="int" value="4"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
  </tile>
  <tile id="60">
   <properties>
    <property name="body type" value="fullbody"/>
    <property name="name" value="t_wall_beton"/>
+   <property name="physics_layer" type="int" value="0"/>
   </properties>
  </tile>
  <wangsets>
